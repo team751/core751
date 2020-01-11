@@ -10,9 +10,8 @@ import frc.robot.core751.subsystems.LightStrip;
 public class TeamColorLights extends CommandBase{
 
     private LightStrip lightStrip;
-    private AddressableLEDBuffer abuf;
     private Alliance alliance;
-    private Color allianceColor;
+    private int[] allianceColor;
 
     public TeamColorLights(LightStrip lightStrip) {
         this.lightStrip = lightStrip;
@@ -23,30 +22,32 @@ public class TeamColorLights extends CommandBase{
 
     @Override
     public void initialize() {
-        this.abuf = new AddressableLEDBuffer(lightStrip.length);
         this.alliance = DriverStation.getInstance().getAlliance();
         switch (alliance) {
             case Red:
-                this.allianceColor = Color.kRed;
+                this.allianceColor = new int[]{0, 255, 255};
             break;
             case Blue:
-                this.allianceColor = Color.kBlue;
+                this.allianceColor = new int[]{240, 255, 255};
             break;
             default:
-                this.allianceColor = Color.kPurple;
+                this.allianceColor = new int[]{300, 255, 255};
             break;
         }
 
         for (int i = 0; i < lightStrip.length; i++) {
-            this.abuf.setLED(i, this.allianceColor);
+            this.lightStrip.setHSVWave(i, 2, this.allianceColor);
         }
-        this.lightStrip.setData(this.abuf);
+        this.lightStrip.update();
         this.lightStrip.start();
     }
 
     @Override
     public void execute() {
-        //this.lightStrip.setData(this.abuf);
+        for (int i = 0; i < lightStrip.length; i++) {
+            this.lightStrip.setHSVWave(i, 2, this.allianceColor);
+        }
+        this.lightStrip.update();
     }
 
     
