@@ -20,7 +20,7 @@ public class SwitchCameraCommand extends CommandBase {
     public void initialize() {
         int cameraNum = UsbCamera.enumerateUsbCameras().length;
         
-        if(m_device + 1 <= cameraNum) {
+        if(m_device + 1 >= cameraNum) {
             m_device = 0;
         } else {
             ++m_device;
@@ -28,6 +28,7 @@ public class SwitchCameraCommand extends CommandBase {
         
         m_cameraSubsystem.switchCamera(m_device);
 
+        SmartDashboard.putNumber("Total Number of Cameras", cameraNum);
         SmartDashboard.putNumber("Camera Device Number", m_device);
     }
 
