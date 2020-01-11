@@ -9,7 +9,7 @@ public class ArcadeDrive extends CommandBase {
     private Joystick driveStick;
     private DifferentialDriveTrain differentialDriveTrain;
 
-    public void ArcadeDrive(int port, DifferentialDriveTrain differentialDriveTrain) {
+    public ArcadeDrive(int port, DifferentialDriveTrain differentialDriveTrain) {
         this.driveStick = new Joystick(port);
         this.differentialDriveTrain = differentialDriveTrain;
     }
