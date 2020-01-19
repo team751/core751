@@ -1,9 +1,10 @@
-package org.team2168.utils;
+package frc.robot.core751.wrappers;
 
 import java.util.TimerTask;
+import java.util.Timer;
 
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.Timer;
+//import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 /**
@@ -67,7 +68,7 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
  */
 public class BNO055 implements Gyro {
 	//Tread variables
-	private Timer executor;
+	private java.util.Timer executor;
 	private static final long THREAD_PERIOD = 20; //ms - max poll rate on sensor.
 	
 	public static final byte BNO055_ADDRESS_A = 0x28;
@@ -346,7 +347,7 @@ public class BNO055 implements Gyro {
 	private BNO055(I2C.Port port, byte address) {
 		imu = new I2C(port, address);
 		
-		executor = new Timer();
+		executor = new java.util.Timer();
 		executor.schedule(new BNO055UpdateTask(this), 0L, THREAD_PERIOD);
 	}
 
@@ -380,10 +381,15 @@ public class BNO055 implements Gyro {
 	public static BNO055 getInstance(opmode_t mode, vector_type_t vectorType) {
 		return getInstance(mode, vectorType, I2C.Port.kOnboard,
 				BNO055_ADDRESS_A);
-	}
+    }
+    
+    @Override
+    public void close() {
+        imu.close();
+    }
 
     @Override
-    private void reset() {
+    public void reset() {
         write8(reg_t.BNO055_SYS_TRIGGER_ADDR, (byte) 0x20);
         state = 3;
         initialized = false;
@@ -393,7 +399,7 @@ public class BNO055 implements Gyro {
 	 * Called periodically. Communicates with the sensor, and checks its state. 
 	 */
 	private void update() {
-        currentTime = Timer.getFPGATimestamp(); //seconds
+        currentTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp(); //seconds
 
         if(currentTime - lastSecond >= 1) {
             double heading = getHeading();
@@ -422,14 +428,14 @@ public class BNO055 implements Gyro {
 					//Sensor present, go to next state
 					sensorPresent = true;
 					state++;
-					nextTime = Timer.getFPGATimestamp() + 0.050;
+					nextTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp() + 0.050;
 				}
 				break;
 			case 1:
 				if(currentTime >= nextTime) {
 					//Switch to config mode (just in case since this is the default)
 					setMode(opmode_t.OPERATION_MODE_CONFIG.getVal());
-					nextTime = Timer.getFPGATimestamp() + 0.050;
+					nextTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp() + 0.050;
 					state++;
 				}
 				break;
@@ -446,7 +452,7 @@ public class BNO055 implements Gyro {
 					//Sensor present, go to next state
 					state++;
 					//Log current time
-					nextTime = Timer.getFPGATimestamp() + 0.050;
+					nextTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp() + 0.050;
 				}
 				break;
 			case 4:
@@ -454,7 +460,7 @@ public class BNO055 implements Gyro {
 				if(currentTime >= nextTime) {
 					/* Set to normal power mode */
 					write8(reg_t.BNO055_PWR_MODE_ADDR, (byte) powermode_t.POWER_MODE_NORMAL.getVal());
-					nextTime = Timer.getFPGATimestamp() + 0.050;
+					nextTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp() + 0.050;
 					state++;
 				}
 				break;
@@ -462,14 +468,14 @@ public class BNO055 implements Gyro {
 				//Use external crystal - 32.768 kHz
 				if(currentTime >= nextTime) {
 					write8(reg_t.BNO055_PAGE_ID_ADDR, (byte) 0x00);
-					nextTime = Timer.getFPGATimestamp() + 0.050;
+					nextTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp() + 0.050;
 					state++;
 				}
 				break;
 			case 6:
 				if(currentTime >= nextTime) {
 					write8(reg_t.BNO055_SYS_TRIGGER_ADDR, (byte) 0x80);
-					nextTime = Timer.getFPGATimestamp() + 0.500;
+					nextTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp() + 0.500;
 					state++;
 				}
 				break;
@@ -477,7 +483,7 @@ public class BNO055 implements Gyro {
 				//Set operating mode to mode requested at instantiation
 				if(currentTime >= nextTime) {
 					setMode(requestedMode);
-					nextTime = Timer.getFPGATimestamp() + 1.05;
+					nextTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp() + 1.05;
 					state++;
 				}
 				break;
