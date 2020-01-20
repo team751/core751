@@ -29,7 +29,6 @@ Add connectivity b/x other parts
 
     @Override
     public void execute() {
-        
         this.divder = SmartDashboard.getNumber("Speed Divider", 11);
         if (SmartDashboard.getBoolean("Anit-Brownout mode",true)){
             this.differentialDriveTrain.setSpeedCap(RobotController.getBatteryVoltage()/divder);
@@ -38,23 +37,6 @@ Add connectivity b/x other parts
         }
  
         SmartDashboard.putNumber("Speed Cap",(this.differentialDriveTrain.getSpeedCap()));
-
-        /*
-        Old code
-        if(RobotController.getBatteryVoltage() <= lowerLimit || RobotController.isBrownedOut()) {
-            if(isLiner){
-                this.differentialDriveTrain.setSpeedCap(this.differentialDriveTrain.getSpeedCap() - liner);
-            } else {
-                this.differentialDriveTrain.setSpeedCap(this.differentialDriveTrain.getSpeedCap() * scaler);
-            }
-        } else if(RobotController.getBatteryVoltage() >= upperLimit) {
-            if(isLiner){
-                this.differentialDriveTrain.setSpeedCap(this.differentialDriveTrain.getSpeedCap() + liner);
-            } else {
-                this.differentialDriveTrain.setSpeedCap(this.differentialDriveTrain.getSpeedCap() / scaler);
-                }
-        }*/
-        
 
         this.differentialDriveTrain.getDifferentialDrive().arcadeDrive(-driveStick.getY(), driveStick.getX());
     }
