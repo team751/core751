@@ -80,7 +80,8 @@ public class SmartDifferentialDriveTrain extends SubsystemBase {
         rightGroup.setSpeedCap(cap);
     }
     public double getSpeedCap(){
-        return Math.min(leftGroup.getSpeedCap(),rightGroup.getSpeedCap());//in case they are somehow diffrent
+        return Math.min(leftGroup.getSpeedCap(),rightGroup.getSpeedCap());
+        //in case they are somehow diffrent
     }
 
 

@@ -40,6 +40,7 @@ Add connectivity b/x other parts
         SmartDashboard.putNumber("Speed Cap",(this.differentialDriveTrain.getSpeedCap()));
 
         /*
+        Old code
         if(RobotController.getBatteryVoltage() <= lowerLimit || RobotController.isBrownedOut()) {
             if(isLiner){
                 this.differentialDriveTrain.setSpeedCap(this.differentialDriveTrain.getSpeedCap() - liner);

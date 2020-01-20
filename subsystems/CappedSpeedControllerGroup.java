@@ -8,9 +8,7 @@
 package frc.robot.core751.subsystems;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.SpeedController;
-/**
- * Add your docs here.
- */
+
 public class CappedSpeedControllerGroup extends SpeedControllerGroup{
 
 private double speedCap = 1;
