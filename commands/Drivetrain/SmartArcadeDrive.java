@@ -1,9 +1,10 @@
-package frc.robot.core751.commands.Drivetrain;
+package frc.robot.core751.commands.drivetrain;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.core751.subsystems.SmartDifferentialDriveTrain;
+import frc.robot.Constants;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SmartArcadeDrive extends CommandBase {
@@ -33,7 +34,7 @@ Add connectivity b/x other parts
         if (SmartDashboard.getBoolean("Anit-Brownout mode",true)){
             this.differentialDriveTrain.setSpeedCap(RobotController.getBatteryVoltage()/divder);
         } else{
-            this.differentialDriveTrain.setSpeedCap( SmartDashboard.getNumber("Speed Cap Max", 0.9));
+            this.differentialDriveTrain.setSpeedCap( SmartDashboard.getNumber("Speed Cap Max", Constants.DefaultSpeedCap));
         }
  
         SmartDashboard.putNumber("Speed Cap",(this.differentialDriveTrain.getSpeedCap()));

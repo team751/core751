@@ -6,33 +6,34 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot.core751.subsystems;
+
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.SpeedController;
+import frc.robot.Constants;
 
-public class CappedSpeedControllerGroup extends SpeedControllerGroup{
+public class CappedSpeedControllerGroup extends SpeedControllerGroup {
 
-private double speedCap = 1;
+    private double speedCap = Constants.DefaultSpeedCap;
 
-    public CappedSpeedControllerGroup(SpeedController speedController,
-    SpeedController... speedControllers){
-        super(speedController,speedControllers);
+    public CappedSpeedControllerGroup(SpeedController speedController, SpeedController... speedControllers) {
+        super(speedController, speedControllers);
     }
 
-@Override
-public void set(double speed) {
-    if(speed < 0){
-        speed = Math.max(speed, -speedCap);
-    } else if(speed > 0){
-        speed = Math.min(speed,speedCap);
+    @Override
+    public void set(double speed) {
+        if (speed < 0) {
+            speed = Math.max(speed, -speedCap);
+        } else if (speed > 0) {
+            speed = Math.min(speed, speedCap);
+        }
+        super.set(speed);
     }
-    super.set(speed);
-}
 
-public double getSpeedCap() {
-    return speedCap;
-}
+    public double getSpeedCap() {
+        return speedCap;
+    }
 
-public void setSpeedCap(double speedCap) {
-    this.speedCap = speedCap;
-}
+    public void setSpeedCap(double speedCap) {
+        this.speedCap = speedCap;
+    }
 }
