@@ -10,7 +10,9 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import frc.robot.core751.wrappers.BNO055;
 import frc.robot.core751.wrappers.RevEncoder;
 import frc.robot.core751.wrappers.WCANSparkMax;
@@ -114,8 +116,22 @@ public class DifferentialDriveTrain extends SubsystemBase {
         return Math.IEEEremainder(bno055.getAngle(), 360) /** (DriveConstants.kGyroReversed ? -1.0 : 1.0)*/;
     }
 
+    public Pose2d getPose() {
+        return differentialDriveOdometry.getPoseMeters();
+    }
+    
+    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+        return new DifferentialDriveWheelSpeeds(mainLeftEncoder.getRate(), 
+                                                mainRightEncoder.getRate());
+    }
+
     public DifferentialDrive getDifferentialDrive() {
         return this.differentialDrive;
+    }
+
+    public void setVolts(double leftVolts, double rightVolts) {
+        leftGroup.setVoltage(leftVolts);
+        rightGroup.setVoltage(-rightVolts);
     }
 
     public void updateOdometry() {
@@ -123,5 +139,4 @@ public class DifferentialDriveTrain extends SubsystemBase {
                                          mainLeftEncoder.getDistance(), 
                                          mainRightEncoder.getDistance());
     }
-    
 }
