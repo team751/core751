@@ -47,7 +47,7 @@ public class LightStrip extends SubsystemBase {
         ni %= this.length;
         
         v = (int) (v *   (  (Math.cos( (((double)(ni))/this.length)*cycleCount*2  * Math.PI )  + 2 )  /3)    );
-        System.out.println(h +" " + s + " " + v);
+        
         this.setHSV(i, h, s, v);
     }
 
