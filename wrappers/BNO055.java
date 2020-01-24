@@ -3,8 +3,8 @@ package frc.robot.core751.wrappers;
 import java.util.TimerTask;
 import java.util.Timer;
 
-//import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.I2C;
+//import edu.wpi.first.wpilibj.SerialPort;
 //import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
@@ -78,7 +78,7 @@ public class BNO055 implements Gyro {
 
 	private static BNO055 instance;
 	
-	private static SerialPort imu;
+	private static I2C imu;
 	private static int _mode;
 	private static opmode_t requestedMode; //user requested mode of operation.
 	private static vector_type_t requestedVectorType;
@@ -345,8 +345,8 @@ public class BNO055 implements Gyro {
 	 * @param port the physical port the sensor is plugged into on the roboRio
 	 * @param address the address the sensor is at (0x28 or 0x29)
 	 */
-	private BNO055(SerialPort.Port port, int baud) {
-		imu = new SerialPort(baud, port);
+	private BNO055(I2C.Port port, byte address) {
+		imu = new I2C(port, address);
 		
 		executor = new java.util.Timer();
 		executor.schedule(new BNO055UpdateTask(this), 0L, THREAD_PERIOD);
@@ -361,9 +361,9 @@ public class BNO055 implements Gyro {
 	 * @return the instantiated BNO055 object
 	 */
 	public static BNO055 getInstance(opmode_t mode, vector_type_t vectorType,
-									 SerialPort.Port port) {
+									 I2C.Port port, byte address) {
 		if(instance == null) {
-			instance = new BNO055(port, 115200);
+			instance = new BNO055(port, address);
 		}
 		requestedMode = mode;
 		requestedVectorType = vectorType;
@@ -380,7 +380,8 @@ public class BNO055 implements Gyro {
 	 * @return the instantiated BNO055 object
 	 */
 	public static BNO055 getInstance(opmode_t mode, vector_type_t vectorType) {
-		return getInstance(mode, vectorType, SerialPort.Port.kMXP);
+		return getInstance(mode, vectorType, I2C.Port.kOnboard,
+						   BNO055_ADDRESS_A);
     }
     
     @Override
@@ -423,9 +424,11 @@ public class BNO055 implements Gyro {
 				//Wait for the sensor to be present
 				if((0xFF & read8(reg_t.BNO055_CHIP_ID_ADDR)) != BNO055_ID) {
 					//Sensor not present, keep trying
+					System.out.println("Didn't find sensor");
 					sensorPresent = false;
 				} else {
 					//Sensor present, go to next state
+					System.out.println("found sensor");
 					sensorPresent = true;
 					state++;
 					nextTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp() + 0.050;
@@ -513,7 +516,7 @@ public class BNO055 implements Gyro {
 		double headingDiff = 0.0;
 		
 		// Read vector data (6 bytes)
-		readLen(positionVector);
+		readLen(requestedVectorType.getVal(), positionVector);
 
 		x = (short)((positionVector[0] & 0xFF)
 				| ((positionVector[1] << 8) & 0xFF00));
@@ -810,11 +813,14 @@ public class BNO055 implements Gyro {
 	 * @param value a byte of data to write
 	 * @return whatever I2CJNI.i2CWrite returns. It's not documented in the wpilib javadocs!
 	 */
-	private void write8(reg_t reg, byte value) {
-		imu.write(new byte[]{value}, 1);
-		imu.flush();
-	}
+	private boolean write8(reg_t reg, byte value) {
+		boolean retVal = false;
 
+		retVal = imu.write(reg.getVal(), value);
+
+		return retVal;
+	}
+	
 	/**
 	 * Reads an 8 bit value over I2C
 	 * @param reg the register to read from.
@@ -823,7 +829,8 @@ public class BNO055 implements Gyro {
 	private byte read8(reg_t reg) {
 		byte[] vals = new byte[1];
 
-		readLen(vals);
+		readLen(reg, vals);
+
 		return vals[0];
 	}
 
@@ -834,8 +841,27 @@ public class BNO055 implements Gyro {
 	 * @param buffer the size of the data to read
 	 * @return true on success
 	 */
-	private void readLen(byte[] buffer) {
-		buffer = imu.read(buffer.length);
+	private boolean readLen(int reg, byte[] buffer) {
+		boolean retVal = true;
+
+		if (buffer == null || buffer.length < 1) {
+			return false;
+		}
+
+		retVal = !imu.read(reg, buffer.length, buffer);
+
+		return retVal;
+	}
+
+	/**
+	 * Reads the specified number of bytes over I2C
+	 *
+	 * @param reg the address to read from
+	 * @param buffer to store the read data into
+	 * @return true on success
+	 */
+	private boolean readLen(reg_t reg, byte[] buffer) {
+		return readLen(reg.getVal(), buffer);
 	}
 	
 	private class BNO055UpdateTask extends TimerTask {
@@ -852,7 +878,7 @@ public class BNO055 implements Gyro {
 		 * Called periodically in its own thread
 		 */
 		public void run() {
-			//imu.update();
+			imu.update();
 			//imu.flush();
 		}
 	}
