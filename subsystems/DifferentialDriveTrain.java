@@ -96,6 +96,8 @@ public class DifferentialDriveTrain extends SubsystemBase {
             if(((BNO055)(bno055)).isSensorPresent()) {
                 System.out.println("Encoders and IMU present. PID is supported");
 
+                bno055.calibrate();
+
                 differentialDriveOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
 
                 return;
@@ -110,6 +112,14 @@ public class DifferentialDriveTrain extends SubsystemBase {
             }
         }
         System.out.println("PID is not supported");
+    }
+
+    public boolean isBNO055Present() {
+        return ((BNO055)(bno055)).isSensorPresent();
+    }
+
+    public boolean isBNO055Calibrated() {
+        return ((BNO055)(bno055)).isCalibrated();
     }
 
     public double getHeading() {

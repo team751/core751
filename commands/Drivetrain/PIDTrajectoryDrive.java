@@ -2,7 +2,6 @@ package frc.robot.core751.commands.Drivetrain;
 
 import java.util.List;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
@@ -16,17 +15,23 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import frc.robot.core751.commands.i2cmultiplexer.MultiplexedI2CCommandBase;
 import frc.robot.core751.subsystems.DifferentialDriveTrain;
-
+import frc.robot.core751.subsystems.I2CMultiplexer;
 import frc.robot.Constants;
 
-public class PIDTrajectoryDrive extends CommandBase {
+public class PIDTrajectoryDrive extends MultiplexedI2CCommandBase {
     private DifferentialDriveTrain differentialDriveTrain;
     private SequentialCommandGroup ramseteCommand;
     private Trajectory executingTrajectory;
 
-    public PIDTrajectoryDrive(DifferentialDriveTrain differentialDriveTrain, Pose2d origin, 
-                              List<Translation2d> waypoints, Pose2d endpoint) {
+    public PIDTrajectoryDrive(DifferentialDriveTrain differentialDriveTrain,
+                              Pose2d origin, 
+                              List<Translation2d> waypoints, Pose2d endpoint,
+                              I2CMultiplexer multiplexer, 
+                              int multiplexerI2CDeviceId) {
+        super(multiplexer, multiplexerI2CDeviceId);
+
         DifferentialDriveKinematics diffDriveKinematics = new DifferentialDriveKinematics(
                                                                     Constants.trackWidthMeters);
 
@@ -68,6 +73,8 @@ public class PIDTrajectoryDrive extends CommandBase {
 
     @Override
     public void execute() {
+        super.execute();
+
         ramseteCommand.execute();
     }
 

@@ -1,28 +1,31 @@
 package frc.robot.core751.commands.lightstrip;
 
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.core751.commands.i2cmultiplexer.MultiplexedI2CCommandBase;
+import frc.robot.core751.subsystems.I2CMultiplexer;
 import frc.robot.core751.subsystems.LightStrip;
 
-public class TeamColorLights extends CommandBase{
+public class TeamColorLights extends MultiplexedI2CCommandBase {
 
     private LightStrip lightStrip;
     private Alliance alliance;
     private int[] allianceColor;
 
-    public TeamColorLights(LightStrip lightStrip) {
+    public TeamColorLights(I2CMultiplexer i2cMultiplexer, 
+                           int i2cMultiplexerDeviceNum, 
+                           LightStrip lightStrip) {
+        super(i2cMultiplexer, i2cMultiplexerDeviceNum);
+
         this.lightStrip = lightStrip;
 
         addRequirements(lightStrip);
-
     }
 
     @Override
     public void initialize() {
         this.alliance = DriverStation.getInstance().getAlliance();
+
         switch (alliance) {
             case Red:
                 this.allianceColor = new int[]{0, 255, 255};
@@ -44,11 +47,12 @@ public class TeamColorLights extends CommandBase{
 
     @Override
     public void execute() {
+        super.execute();
+
         for (int i = 0; i < lightStrip.length; i++) {
             this.lightStrip.setHSVWave(i, 2, this.allianceColor);
         }
         this.lightStrip.update();
     }
-
     
 }
