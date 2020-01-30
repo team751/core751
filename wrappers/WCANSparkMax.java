@@ -28,7 +28,6 @@ public class WCANSparkMax implements SpeedController {
         return mot.getEncoder();
     }
 
-
     public void setSoftLimit(CANSparkMax.SoftLimitDirection direction, float limit){
         mot.setSoftLimit(direction, limit);
     }

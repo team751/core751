@@ -17,9 +17,10 @@ public class Camera extends SubsystemBase {
 
     public void switchCamera(int toDeviceNum) {
         if(m_usbCameras[toDeviceNum] != null) {
-            CameraServer.getInstance().startAutomaticCapture(m_usbCameras[toDeviceNum]);
+            CameraServer.getInstance().getServer().setSource(m_usbCameras[toDeviceNum]);
         } else {
             m_usbCameras[toDeviceNum] = CameraServer.getInstance().startAutomaticCapture("USB Camera 0", toDeviceNum);
         }
     }
 }
+

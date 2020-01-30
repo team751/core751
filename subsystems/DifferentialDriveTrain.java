@@ -7,7 +7,14 @@ import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import frc.robot.core751.wrappers.BNO055;
+import frc.robot.core751.wrappers.RevEncoder;
 import frc.robot.core751.wrappers.WCANSparkMax;
 
 public class DifferentialDriveTrain extends SubsystemBase {
@@ -26,6 +33,11 @@ public class DifferentialDriveTrain extends SubsystemBase {
     private SpeedControllerGroup rightGroup;
 
     private DifferentialDrive differentialDrive;
+    private DifferentialDriveOdometry differentialDriveOdometry;
+
+    private Gyro bno055;
+    private RevEncoder mainLeftEncoder;
+    private RevEncoder mainRightEncoder;
 
     private static SpeedControllerGroup arrayToGroup(SpeedController[] sp) {
         // There has to be a better way to do this
@@ -40,6 +52,7 @@ public class DifferentialDriveTrain extends SubsystemBase {
             return new SpeedControllerGroup(sp[0]);
         }
     }
+
 
     public DifferentialDriveTrain(int[] left, int[] right, DriveMotor dm) {
         switch (dm) {
@@ -60,6 +73,7 @@ public class DifferentialDriveTrain extends SubsystemBase {
             for (int i = 0; i < rightEncoderArray.length; ++i) {
                 rightEncoderArray[i] = ((WCANSparkMax) (rightArray[i])).getEncoder();
             }
+
             break;
         case kPWMVictorSPX:
             leftArray = new PWMVictorSPX[left.length];
@@ -72,14 +86,58 @@ public class DifferentialDriveTrain extends SubsystemBase {
             }
             break;
         }
+
         this.leftGroup = arrayToGroup(leftArray);
         this.rightGroup = arrayToGroup(rightArray);
 
         this.differentialDrive = new DifferentialDrive(leftGroup, rightGroup);
+
+        if(mainLeftEncoder != null && mainRightEncoder != null && 
+           bno055 != null) {
+            if(((BNO055)(bno055)).isSensorPresent()) {
+                System.out.println("Encoders and IMU present. PID is supported");
+
+                differentialDriveOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+
+                return;
+            } else {
+                System.out.println("Encoders present, but IMU isn't. ");
+            }    
+        } else {
+            if(((BNO055)(bno055)).isSensorPresent()) {
+                System.out.println("IMU is present, but encoders aren't.");
+            } else {
+                System.out.println("Encoders and IMU are not present.");
+            }
+        }
+        System.out.println("PID is not supported");
+    }
+
+    public double getHeading() {
+        return Math.IEEEremainder(bno055.getAngle(), 360) /** (DriveConstants.kGyroReversed ? -1.0 : 1.0)*/;
+    }
+
+    public Pose2d getPose() {
+        return differentialDriveOdometry.getPoseMeters();
+    }
+    
+    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+        return new DifferentialDriveWheelSpeeds(mainLeftEncoder.getRate(), 
+                                                mainRightEncoder.getRate());
     }
 
     public DifferentialDrive getDifferentialDrive() {
         return this.differentialDrive;
     }
 
+    public void setVolts(double leftVolts, double rightVolts) {
+        leftGroup.setVoltage(leftVolts);
+        rightGroup.setVoltage(-rightVolts);
+    }
+
+    public void updateOdometry() {
+        differentialDriveOdometry.update(Rotation2d.fromDegrees(getHeading()), 
+                                         mainLeftEncoder.getDistance(), 
+                                         mainRightEncoder.getDistance());
+    }
 }
