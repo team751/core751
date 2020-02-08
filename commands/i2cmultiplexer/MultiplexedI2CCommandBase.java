@@ -20,6 +20,7 @@ public abstract class MultiplexedI2CCommandBase extends CommandBase {
     private void switchDeviceId() {
         if(multiplexer.getLastSetDevice() != multiplexerI2CDeviceId) {
             multiplexer.switchI2CDevice(multiplexerI2CDeviceId);
+            System.out.println("Switched to " + multiplexerI2CDeviceId);
         }
     }
 

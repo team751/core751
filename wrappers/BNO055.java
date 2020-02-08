@@ -424,11 +424,11 @@ public class BNO055 implements Gyro {
 				//Wait for the sensor to be present
 				if((0xFF & read8(reg_t.BNO055_CHIP_ID_ADDR)) != BNO055_ID) {
 					//Sensor not present, keep trying
-					System.out.println("Didn't find sensor");
+					//System.out.println("Didn't find sensor");
 					sensorPresent = false;
 				} else {
 					//Sensor present, go to next state
-					System.out.println("found sensor");
+					System.out.println("found BNO055 sensor");
 					sensorPresent = true;
 					state++;
 					nextTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp() + 0.050;
@@ -704,13 +704,33 @@ public class BNO055 implements Gyro {
 		return data;
 	}
 
-    @Override
+    /*@Override
+    public void calibrate() {
+		boolean calibrated = false;
+		int calibratedNumber = 0;
+
+        while(!calibrated) {
+            if(calibratedNumber == 3 && isCalibrated()) {
+				calibrated = true;
+			} else if (getCalibration().gyro == 3) {
+				++calibratedNumber;
+				System.out.println(calibratedNumber);
+			} else {
+				calibratedNumber = 0;
+			}
+		}
+		System.out.println("Calibrated with getCalibration.gyro == " + getCalibration().gyro);
+	}*/
+	
+	@Override
     public void calibrate() {
         boolean calibrated = (getCalibration().gyro == 3);
 
         while(!calibrated) {
-            calibrated = (getCalibration().gyro == 3);
-        }
+            calibrated = (getCalibration().gyro == 3 /*&& isCalibrated()*/);
+		}
+		
+		System.out.println("Calibrated with getCalibration.gyro == " + getCalibration().gyro);
     }
 
 	/**
