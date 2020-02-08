@@ -62,6 +62,7 @@ public class DifferentialDriveTrain extends SubsystemBase {
             break;
         }
         this.leftGroup = arrayToGroup(leftArray);
+        this.leftGroup.setInverted(true);
         this.rightGroup = arrayToGroup(rightArray);
 
         this.differentialDrive = new DifferentialDrive(leftGroup, rightGroup);
