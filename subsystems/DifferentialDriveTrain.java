@@ -18,6 +18,18 @@ public class DifferentialDriveTrain extends SubsystemBase {
         kPWMVictorSPX,
     }
 
+    public enum DriveTrainDirrection {
+        FORWARD(1),
+        BACKWARD(-1);
+
+        private int mod;
+        public int getMod(){return this.mod;}
+        private DriveTrainDirrection(int mod) {
+            this.mod = mod;
+        }
+
+    }
+
     private SpeedController[] leftArray;
     private SpeedController[] rightArray;
 
@@ -27,6 +39,8 @@ public class DifferentialDriveTrain extends SubsystemBase {
     private DifferentialDrive differentialDrive;
 
     private SpeedController[] controllers;
+
+    private DriveTrainDirrection dirrection = DriveTrainDirrection.FORWARD;
 
     private static SpeedControllerGroup arrayToGroup(SpeedController[] sp) {
         //There has to be a better way to do this
@@ -121,6 +135,14 @@ public class DifferentialDriveTrain extends SubsystemBase {
 
     public DifferentialDrive getDifferentialDrive() {
         return this.differentialDrive;
+    }
+
+    public DriveTrainDirrection getDirrection() {
+        return this.dirrection;
+    }
+
+    public void setDirrection(DriveTrainDirrection dirrection) {
+        this.dirrection = dirrection;
     }
 
     public static class SmartControllerProfile {
