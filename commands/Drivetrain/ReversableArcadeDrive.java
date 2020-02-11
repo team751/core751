@@ -17,7 +17,7 @@ public class ReversableArcadeDrive extends CommandBase {
 
     @Override
     public void execute() {
-        int mod = differentialDriveTrain.getDirrection().getMod();
+        int mod = differentialDriveTrain.getDirection().getMod();
         this.differentialDriveTrain.getDifferentialDrive().arcadeDrive(driveStick.getX()*mod, driveStick.getY()*mod);
     }
 
