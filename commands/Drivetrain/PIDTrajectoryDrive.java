@@ -25,7 +25,7 @@ import frc.robot.Constants;
 
 public class PIDTrajectoryDrive extends CommandBase {
     private DifferentialDriveTrain differentialDriveTrain;
-    private SequentialCommandGroup ramseteCommand;
+    private CommandBase ramseteCommand;
     private Trajectory executingTrajectory;
 
     public PIDTrajectoryDrive(DifferentialDriveTrain differentialDriveTrain,
@@ -65,7 +65,7 @@ public class PIDTrajectoryDrive extends CommandBase {
             this.differentialDriveTrain
         );
 
-        this.ramseteCommand = ramseteCommand.andThen(() -> this.differentialDriveTrain.setVolts(0, 0));
+        this.ramseteCommand = ramseteCommand/*.andThen(() -> this.differentialDriveTrain.setVolts(0, 0))*/;
 
         addRequirements(differentialDriveTrain);
     }

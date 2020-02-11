@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import frc.robot.core751.wrappers.ArduinoGyro;
 import frc.robot.core751.wrappers.BNO055;
 import frc.robot.core751.wrappers.RevEncoder;
 import frc.robot.core751.wrappers.WCANSparkMax;
@@ -52,8 +53,7 @@ public class DifferentialDriveTrain extends SubsystemBase {
     }
 
     public DifferentialDriveTrain (int[] left, int[] right, driveMotor dm) {
-        bno055 = BNO055.getInstance(BNO055.opmode_t.OPERATION_MODE_IMUPLUS,
-                                    BNO055.vector_type_t.VECTOR_EULER);
+        bno055 = new ArduinoGyro();
 
         switch (dm) {
             case kSparkMaxBrushless:
@@ -93,10 +93,10 @@ public class DifferentialDriveTrain extends SubsystemBase {
 
         if(mainLeftEncoder != null && mainRightEncoder != null && 
            bno055 != null) {
-            if(((BNO055)(bno055)).isSensorPresent()) {
+            if(true) {
                 System.out.println("Encoders and IMU present. PID is supported");
 
-                bno055.calibrate();
+                //bno055.calibrate();
 
                 differentialDriveOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
 
@@ -115,7 +115,7 @@ public class DifferentialDriveTrain extends SubsystemBase {
     }
 
     public double getHeading() {
-        return Math.IEEEremainder(bno055.getAngle(), 360) /** (DriveConstants.kGyroReversed ? -1.0 : 1.0)*/;
+        return bno055.getAngle();//Math.IEEEremainder(bno055.getAngle(), 360) /** (DriveConstants.kGyroReversed ? -1.0 : 1.0)*/;
     }
 
     public Pose2d getPose() {
