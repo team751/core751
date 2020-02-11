@@ -1,5 +1,7 @@
 package frc.robot.core751.subsystems;
 
+import com.revrobotics.SparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.PWMVictorSPX;
@@ -23,6 +25,8 @@ public class DifferentialDriveTrain extends SubsystemBase {
     private SpeedControllerGroup rightGroup;
 
     private DifferentialDrive differentialDrive;
+
+    private SpeedController[] controllers;
 
     private static SpeedControllerGroup arrayToGroup(SpeedController[] sp) {
         //There has to be a better way to do this
@@ -63,6 +67,53 @@ public class DifferentialDriveTrain extends SubsystemBase {
         }
         this.leftGroup = arrayToGroup(leftArray);
         this.rightGroup = arrayToGroup(rightArray);
+        this.controllers = new SpeedController[this.leftArray.length + this.rightArray.length];
+
+        this.differentialDrive = new DifferentialDrive(leftGroup, rightGroup);
+
+    }
+
+    public DifferentialDriveTrain (int[] left, int[] right, driveMotor dm, SmartControllerProfile profile) {
+        switch (dm) {
+            case kSparkMaxBrushless:
+                leftArray = new WCANSparkMax[left.length];
+                rightArray = new WCANSparkMax[right.length];
+                for (int i = 0; i < leftArray.length; i++) {
+                    leftArray[i] = new WCANSparkMax(left[i], MotorType.kBrushless);
+                }
+                for (int i = 0; i < rightArray.length; i++) {
+                    rightArray[i] = new WCANSparkMax(right[i], MotorType.kBrushless);
+                }
+            break;
+            case kPWMVictorSPX:
+                leftArray = new PWMVictorSPX[left.length];
+                rightArray = new PWMVictorSPX[right.length];
+                for (int i = 0; i < leftArray.length; i++) {
+                    leftArray[i] = new PWMVictorSPX(left[i]);
+                }
+                for (int i = 0; i < rightArray.length; i++) {
+                    rightArray[i] = new PWMVictorSPX(right[i]);
+                }
+            break;
+        }
+        this.leftGroup = arrayToGroup(leftArray);
+        this.rightGroup = arrayToGroup(rightArray);
+        this.controllers = new SpeedController[this.leftArray.length + this.rightArray.length];
+
+        switch (dm) {
+            case kSparkMaxBrushless:
+                for (SpeedController sc : this.controllers) {
+                    WCANSparkMax sMax = (WCANSparkMax)sc;
+                    if (profile.idle != null) sMax.setBreakMode(profile.idle);
+                    if (profile.rate != 0) sMax.setOpenLoopRampRate(profile.rate);
+                    if (profile.rate != 0) sMax.setClosedLoopRampRate(profile.rate);
+                    if (profile.limit != 0) sMax.setCurrentLimit(profile.limit);
+                }
+            break;
+            case kPWMVictorSPX:
+                //TODO: Add suport for this
+            break;
+        }
 
         this.differentialDrive = new DifferentialDrive(leftGroup, rightGroup);
 
@@ -70,6 +121,46 @@ public class DifferentialDriveTrain extends SubsystemBase {
 
     public DifferentialDrive getDifferentialDrive() {
         return this.differentialDrive;
+    }
+
+    public static class SmartControllerProfile {
+        public IdleMode idle;
+        public double rate;
+        public int limit;
+
+        public SmartControllerProfile(IdleMode idle, double rate, int limit) {
+            this.idle = idle;
+            this.rate = rate;
+            this.limit = limit;
+        }
+
+        public SmartControllerProfile(IdleMode idle, double rate) {
+            this.idle = idle;
+            this.rate = rate;
+        }
+
+        public SmartControllerProfile(IdleMode idle) {
+            this.idle = idle;
+        }
+
+        public SmartControllerProfile(double rate, int limit) {
+            this.rate = rate;
+            this.limit = limit;
+        }
+
+        public SmartControllerProfile(int limit) {
+            this.limit = limit;
+        }
+
+        public SmartControllerProfile(IdleMode idle, int limit) {
+            this.idle = idle;
+            this.limit = limit;
+        }
+
+        public SmartControllerProfile(double rate) {
+            this.rate = rate;
+        }
+
     }
 
 
