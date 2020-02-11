@@ -114,14 +114,6 @@ public class DifferentialDriveTrain extends SubsystemBase {
         System.out.println("PID is not supported");
     }
 
-    public boolean isBNO055Present() {
-        return ((BNO055)(bno055)).isSensorPresent();
-    }
-
-    public boolean isBNO055Calibrated() {
-        return ((BNO055)(bno055)).isCalibrated();
-    }
-
     public double getHeading() {
         return Math.IEEEremainder(bno055.getAngle(), 360) /** (DriveConstants.kGyroReversed ? -1.0 : 1.0)*/;
     }

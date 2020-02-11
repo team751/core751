@@ -2,21 +2,16 @@ package frc.robot.core751.commands.lightstrip;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.core751.commands.i2cmultiplexer.MultiplexedI2CCommandBase;
-import frc.robot.core751.subsystems.I2CMultiplexer;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.core751.subsystems.LightStrip;
 
-public class TeamColorLights extends MultiplexedI2CCommandBase {
+public class TeamColorLights extends CommandBase {
 
     private LightStrip lightStrip;
     private Alliance alliance;
     private int[] allianceColor;
 
-    public TeamColorLights(I2CMultiplexer i2cMultiplexer, 
-                           int i2cMultiplexerDeviceNum, 
-                           LightStrip lightStrip) {
-        super(i2cMultiplexer, i2cMultiplexerDeviceNum);
-
+    public TeamColorLights(LightStrip lightStrip) {
         this.lightStrip = lightStrip;
 
         addRequirements(lightStrip);

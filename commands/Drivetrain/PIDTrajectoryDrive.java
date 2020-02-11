@@ -1,6 +1,8 @@
 package frc.robot.core751.commands.Drivetrain;
 
+import java.nio.file.Path;
 import java.util.List;
+import java.io.IOException;
 
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -8,30 +10,27 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.controller.PIDController; 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
-import frc.robot.core751.commands.i2cmultiplexer.MultiplexedI2CCommandBase;
 import frc.robot.core751.subsystems.DifferentialDriveTrain;
-import frc.robot.core751.subsystems.I2CMultiplexer;
 import frc.robot.Constants;
 
-public class PIDTrajectoryDrive extends MultiplexedI2CCommandBase {
+public class PIDTrajectoryDrive extends CommandBase {
     private DifferentialDriveTrain differentialDriveTrain;
     private SequentialCommandGroup ramseteCommand;
     private Trajectory executingTrajectory;
 
     public PIDTrajectoryDrive(DifferentialDriveTrain differentialDriveTrain,
                               Pose2d origin, 
-                              List<Translation2d> waypoints, Pose2d endpoint,
-                              I2CMultiplexer multiplexer, 
-                              int multiplexerI2CDeviceId) {
-        super(multiplexer, multiplexerI2CDeviceId);
-
+                              List<Translation2d> waypoints, Pose2d endpoint) {
         DifferentialDriveKinematics diffDriveKinematics = new DifferentialDriveKinematics(
                                                                     Constants.trackWidthMeters);
 
@@ -42,7 +41,7 @@ public class PIDTrajectoryDrive extends MultiplexedI2CCommandBase {
                                                                Constants.kaVoltSecondsSquaredPerMeter), 
                                     diffDriveKinematics, 10);
 
-        TrajectoryConfig trajectoryConfig = new TrajectoryConfig(Constants.maxPIDTrajectoryDriveVolts, 
+        TrajectoryConfig trajectoryConfig = new TrajectoryConfig(Constants.maxPIDTrajectoryDriveNeomVelocity, 
                                                                  Constants.maxPIDTrajectoryDriveAcceleration);
         
         trajectoryConfig = trajectoryConfig.setKinematics(diffDriveKinematics).addConstraint(autoVoltageConstraint);
@@ -69,6 +68,17 @@ public class PIDTrajectoryDrive extends MultiplexedI2CCommandBase {
         this.ramseteCommand = ramseteCommand.andThen(() -> this.differentialDriveTrain.setVolts(0, 0));
 
         addRequirements(differentialDriveTrain);
+    }
+
+    public PIDTrajectoryDrive(DifferentialDriveTrain differentialDriveTrain,
+                              String pathWeaverFilePath) {
+        try {
+            Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(pathWeaverFilePath);
+            Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+        } catch (IOException ex) {
+            DriverStation.reportError("Unable to open trajectory: " + pathWeaverFilePath, 
+                                      ex.getStackTrace());
+        }
     }
 
     @Override
