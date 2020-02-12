@@ -36,13 +36,13 @@ public class ArduinoGyro implements Gyro {
 
     @Override
     public double getAngle() {
-        // TODO Auto-generated method stub
+        update();
         return heading;
     }
 
     @Override
     public double getRate() {
-        // TODO Auto-generated method stub
+        update();
         return rate;
     }
 

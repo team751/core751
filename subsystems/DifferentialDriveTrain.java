@@ -93,17 +93,14 @@ public class DifferentialDriveTrain extends SubsystemBase {
 
         if(mainLeftEncoder != null && mainRightEncoder != null && 
            bno055 != null) {
-            if(true) {
-                System.out.println("Encoders and IMU present. PID is supported");
 
-                //bno055.calibrate();
+            System.out.println("Encoders and IMU present. PID is supported");
 
-                differentialDriveOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+            //bno055.calibrate();
 
-                return;
-            } else {
-                System.out.println("Encoders present, but IMU isn't. ");
-            }    
+            differentialDriveOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+
+            return;
         } else {
             if(((BNO055)(bno055)).isSensorPresent()) {
                 System.out.println("IMU is present, but encoders aren't.");
@@ -115,7 +112,7 @@ public class DifferentialDriveTrain extends SubsystemBase {
     }
 
     public double getHeading() {
-        return bno055.getAngle();//Math.IEEEremainder(bno055.getAngle(), 360) /** (DriveConstants.kGyroReversed ? -1.0 : 1.0)*/;
+        return Math.IEEEremainder(bno055.getAngle(), 360) /** (DriveConstants.kGyroReversed ? -1.0 : 1.0)*/;
     }
 
     public Pose2d getPose() {

@@ -43,7 +43,7 @@ public class PIDTrajectoryDrive extends CommandBase {
 
         TrajectoryConfig trajectoryConfig = new TrajectoryConfig(Constants.maxPIDTrajectoryDriveNeomVelocity, 
                                                                  Constants.maxPIDTrajectoryDriveAcceleration);
-        
+                                
         trajectoryConfig = trajectoryConfig.setKinematics(diffDriveKinematics).addConstraint(autoVoltageConstraint);
 
         this.differentialDriveTrain = differentialDriveTrain;
