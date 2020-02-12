@@ -24,6 +24,8 @@ import frc.robot.core751.subsystems.DifferentialDriveTrain;
 import frc.robot.Constants;
 
 public class PIDTrajectoryDrive extends CommandBase {
+    private boolean inited = false;
+
     private DifferentialDriveTrain differentialDriveTrain;
     private CommandBase ramseteCommand;
     private Trajectory executingTrajectory;
@@ -84,6 +86,12 @@ public class PIDTrajectoryDrive extends CommandBase {
     @Override
     public void execute() {
         super.execute();
+
+        if(!inited) {
+            ramseteCommand.initialize();
+
+            inited = true;
+        }
 
         ramseteCommand.execute();
     }
