@@ -56,7 +56,7 @@ public class DifferentialDriveTrain extends SubsystemBase {
         }
     }
 
-    public DifferentialDriveTrain (int[] left, int[] right, driveMotor dm) {
+    public DifferentialDriveTrain (int[] left, int[] right, driveMotor dm, boolean invertLeft, boolean invertRight) {
         switch (dm) {
             case kSparkMaxBrushless:
                 leftArray = new WCANSparkMax[left.length];
@@ -82,12 +82,14 @@ public class DifferentialDriveTrain extends SubsystemBase {
         this.leftGroup = arrayToGroup(leftArray);
         this.rightGroup = arrayToGroup(rightArray);
         this.controllers = new SpeedController[this.leftArray.length + this.rightArray.length];
-
+        
+        this.leftGroup.setInverted(invertLeft);
+        this.rightGroup.setInverted(invertRight);
         this.differentialDrive = new DifferentialDrive(leftGroup, rightGroup);
 
     }
 
-    public DifferentialDriveTrain (int[] left, int[] right, driveMotor dm, SmartControllerProfile profile) {
+    public DifferentialDriveTrain (int[] left, int[] right, driveMotor dm, SmartControllerProfile profile, boolean invertLeft, boolean invertRight) {
         switch (dm) {
             case kSparkMaxBrushless:
                 leftArray = new WCANSparkMax[left.length];
@@ -112,7 +114,16 @@ public class DifferentialDriveTrain extends SubsystemBase {
         }
         this.leftGroup = arrayToGroup(leftArray);
         this.rightGroup = arrayToGroup(rightArray);
+        this.leftGroup.setInverted(invertLeft);
+        this.rightGroup.setInverted(invertRight);
+
         this.controllers = new SpeedController[this.leftArray.length + this.rightArray.length];
+        for (int i = 0; i < leftArray.length; i++) {
+            this.controllers[i] = this.leftArray[i];
+        }
+        for (int i = 0; i < rightArray.length; i++) {
+            this.controllers[leftArray.length+i] = this.rightArray[i];
+        }
 
         switch (dm) {
             case kSparkMaxBrushless:
