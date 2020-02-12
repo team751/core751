@@ -18,6 +18,18 @@ public class DifferentialDriveTrain extends SubsystemBase {
         kPWMVictorSPX,
     }
 
+    public enum DriveTrainDirection {
+        FORWARD(1),
+        BACKWARD(-1);
+
+        private int mod;
+        public int getMod(){return this.mod;}
+        private DriveTrainDirection(int mod) {
+            this.mod = mod;
+        }
+
+    }
+
     private SpeedController[] leftArray;
     private SpeedController[] rightArray;
 
@@ -27,6 +39,8 @@ public class DifferentialDriveTrain extends SubsystemBase {
     private DifferentialDrive differentialDrive;
 
     private SpeedController[] controllers;
+
+    private DriveTrainDirection direction = DriveTrainDirection.FORWARD;
 
     private static SpeedControllerGroup arrayToGroup(SpeedController[] sp) {
         //There has to be a better way to do this
@@ -42,7 +56,7 @@ public class DifferentialDriveTrain extends SubsystemBase {
         }
     }
 
-    public DifferentialDriveTrain (int[] left, int[] right, driveMotor dm) {
+    public DifferentialDriveTrain (int[] left, int[] right, driveMotor dm, boolean invertLeft, boolean invertRight) {
         switch (dm) {
             case kSparkMaxBrushless:
                 leftArray = new WCANSparkMax[left.length];
@@ -68,12 +82,14 @@ public class DifferentialDriveTrain extends SubsystemBase {
         this.leftGroup = arrayToGroup(leftArray);
         this.rightGroup = arrayToGroup(rightArray);
         this.controllers = new SpeedController[this.leftArray.length + this.rightArray.length];
-
+        
+        this.leftGroup.setInverted(invertLeft);
+        this.rightGroup.setInverted(invertRight);
         this.differentialDrive = new DifferentialDrive(leftGroup, rightGroup);
 
     }
 
-    public DifferentialDriveTrain (int[] left, int[] right, driveMotor dm, SmartControllerProfile profile) {
+    public DifferentialDriveTrain (int[] left, int[] right, driveMotor dm, SmartControllerProfile profile, boolean invertLeft, boolean invertRight) {
         switch (dm) {
             case kSparkMaxBrushless:
                 leftArray = new WCANSparkMax[left.length];
@@ -98,7 +114,16 @@ public class DifferentialDriveTrain extends SubsystemBase {
         }
         this.leftGroup = arrayToGroup(leftArray);
         this.rightGroup = arrayToGroup(rightArray);
+        this.leftGroup.setInverted(invertLeft);
+        this.rightGroup.setInverted(invertRight);
+
         this.controllers = new SpeedController[this.leftArray.length + this.rightArray.length];
+        for (int i = 0; i < leftArray.length; i++) {
+            this.controllers[i] = this.leftArray[i];
+        }
+        for (int i = 0; i < rightArray.length; i++) {
+            this.controllers[leftArray.length+i] = this.rightArray[i];
+        }
 
         switch (dm) {
             case kSparkMaxBrushless:
@@ -121,6 +146,14 @@ public class DifferentialDriveTrain extends SubsystemBase {
 
     public DifferentialDrive getDifferentialDrive() {
         return this.differentialDrive;
+    }
+
+    public DriveTrainDirection getDirection() {
+        return this.direction;
+    }
+
+    public void setDirection(DriveTrainDirection direction) {
+        this.direction = direction;
     }
 
     public static class SmartControllerProfile {
