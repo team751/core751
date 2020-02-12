@@ -163,102 +163,62 @@ public class MacroMaker extends CommandBase {
         writer.print(temp);
     }
 
-    private class Macro extends CommandBase {
-        private LinkedList<Controllable> subsystemList = new LinkedList<>();
+    private abstract class Macro { public abstract void run(); } //Just to have an abstract class to extend.
 
-        private LinkedList valueList = new LinkedList<>();
-        private LinkedList<Integer> codeList = new LinkedList<>();
-        // Maybe combine these two?
-        // Maybe move these three to a diffrent nested class?
+    private static class buttonMacro extends Macro{
 
-        private LinkedList<Long> timeList = new LinkedList<>();
+        public static enum pressModel{
+            Press,
+            Hold,
+            Release
+        }
+    }
+
+    private class commandMacro extends Macro{
+
+        private Controllable subsystem;
+        private Object value;//Turn to Parsable when Wrappers are done
+        private int code;
+
+        public commandMacro(Controllable subsystem, Object value) {
+            this(subsystem, value, 0);
+        }
+    
+        public commandMacro(Controllable subsystem, Object value, int code) {                                                               
+            this.subsystem = subsystem;
+            this.value = value;
+            this.code = code;
+        }
 
         @Override
-        public String toString() {
+        public void run() {
+            subsystem.execute(value, code);
+        }
+
+    }
+    private class MacroList extends CommandBase {
+        
+        private LinkedList<Macro> macros = new LinkedList<>();
+        private LinkedList<Long> timeList = new LinkedList<>();
+
+       /* public String toString() {
             String returnValue = "";
             for(int i = 0; i < subsystemList.size(); i++){
                 returnValue += subsystemList.get(i) + "," + valueList.get(i) + "," + codeList.get(i) + "," + timeList.get(i) + ",;";//The comma before the semi-colon is very importaint
             }
             return returnValue;
+        } */
+
+       
+        public void remove() {
+           
         }
 
-        public void add(Controllable subsystem, Object value) {
-            add(subsystem, value, 0, 0);
-        }
-
-        public void add(Controllable subsystem, Object value, int code) {
-            add(subsystem, value, code, 0);
-        }
-
-        public void add(Controllable subsystem, Object value, long time) {
-            add(subsystem, value, 0, time);
-        }
-
-        public void add(Controllable subsystem, Object value, int code, long time) {// Is there a better way then using
-                                                                                    // object for value?
-            subsystemList.add(subsystem);
-            valueList.add(value);
-            codeList.add(code);
-            timeList.add(time);
-        }
-
-        public void remove(Controllable subsystem) {
-            if (subsystemList.contains(subsystem)) {
-                int index = subsystemList.indexOf(subsystem);
-                subsystemList.remove(index);
-                valueList.remove(index);
-                codeList.remove(index);
-                timeList.remove(index);
-            }
-        }
-
-        @Override
-        public void execute() {
-
-            subsystemList.add(null);
-            valueList.add(null);
-            codeList.add(null);
-            timeList.add(null);// Better way?
-
-            int index = 0;
-
-            Controllable subsystem = subsystemList.get(index);
-            Object value = valueList.get(index);
-            int code = codeList.get(index);
-            long delay = timeList.get(index);
-
-            long time = System.currentTimeMillis();
-
-            while (subsystem != null) {
-                if (System.currentTimeMillis() >= time + delay) {
-                    subsystem.execute(value, code);
-                    index++;
-                    subsystem = subsystemList.get(index);
-                    value = valueList.get(index);
-                    code = codeList.get(index);
-                    delay = timeList.get(index);
-                    time = System.currentTimeMillis();
-                }
-            }
-
-        }
     }
     private class FileFormatException extends Exception{
         public FileFormatException(int line){
             super("" + line);
         }
     }
-    public class PairNumberValue<T1 extends Parseable,T2 extends Parseable> implements Parseable{
-        T1 value1;
-        T2 value2;
-        @Override
-        public void parse(String string) {//change values of thing1 and thing2 beCuase nO stTic In IntErfAce
-            
-        }
-        @Override
-        public String toString() {
-            // TODO Auto-generated method stub 
-            return super.toString();
-        }
-    }
+   
 }
