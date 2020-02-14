@@ -30,8 +30,8 @@ public class DifferentialDriveTrain extends SubsystemBase {
 
     }
 
-    private SpeedController[] leftArray;
-    private SpeedController[] rightArray;
+    public SpeedController[] leftArray;
+    public SpeedController[] rightArray;
 
     private SpeedControllerGroup leftGroup;
     private SpeedControllerGroup rightGroup;
@@ -94,11 +94,17 @@ public class DifferentialDriveTrain extends SubsystemBase {
             case kSparkMaxBrushless:
                 leftArray = new WCANSparkMax[left.length];
                 rightArray = new WCANSparkMax[right.length];
+
+
                 for (int i = 0; i < leftArray.length; i++) {
+                    System.out.println("left = " + left[i]);
                     leftArray[i] = new WCANSparkMax(left[i], MotorType.kBrushless);
+                    leftArray[i].setInverted(false);
                 }
                 for (int i = 0; i < rightArray.length; i++) {
+                    System.out.println("left = " + right[i]);
                     rightArray[i] = new WCANSparkMax(right[i], MotorType.kBrushless);
+                    rightArray[i].setInverted(false);
                 }
             break;
             case kPWMVictorSPX:
@@ -142,6 +148,12 @@ public class DifferentialDriveTrain extends SubsystemBase {
 
         this.differentialDrive = new DifferentialDrive(leftGroup, rightGroup);
 
+        for(int i = 0; leftArray.length > i; ++i) {
+            System.out.println(i + "=" + leftArray[i].getInverted());
+        }
+        for(int i = 0; rightArray.length > i; ++i) {
+            System.out.println(i + "=" + rightArray[i].getInverted());
+        }
     }
 
     public DifferentialDrive getDifferentialDrive() {
