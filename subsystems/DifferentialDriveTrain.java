@@ -13,6 +13,13 @@ import frc.robot.core751.wrappers.WCANSparkMax;
 
 public class DifferentialDriveTrain extends SubsystemBase {
 
+    private class MotorInversionMismatchException extends RuntimeException {
+        MotorInversionMismatchException(String whatSide, String inversions) {
+            super("Motor inversion mismatch detected on " + whatSide + " side:\n" +
+                  inversions);
+        }
+    }
+
     public enum driveMotor {
         kSparkMaxBrushless,
         kPWMVictorSPX,
@@ -56,6 +63,36 @@ public class DifferentialDriveTrain extends SubsystemBase {
         }
     }
 
+    private void checkMotorInversions() {
+        boolean currentInversion = false;
+
+        for(int i = 0; leftArray.length > i; ++i) {
+            if(i == 0) {
+                currentInversion = leftArray[i].getInverted();
+            } else if(leftArray[i].getInverted() != currentInversion) {
+                String inversionString = "";
+                for(int i2 = 0; leftArray.length > i2; ++i2) {
+                    inversionString += " " + i2 + "=" + leftArray[i2].getInverted() + "\n";
+                }
+
+                throw new MotorInversionMismatchException("left", inversionString);
+            }
+        }
+
+        for(int i = 0; rightArray.length > i; ++i) {
+            if(i == 0) {
+                currentInversion = rightArray[i].getInverted();
+            } else if(rightArray[i].getInverted() != currentInversion) {
+                String inversionString = "";
+                for(int i2 = 0; rightArray.length > i2; ++i2) {
+                    inversionString += i2 + "=" + rightArray[i2].getInverted() + "\n";
+                }
+
+                throw new MotorInversionMismatchException("right", inversionString);
+            }
+        }
+    }
+
     public DifferentialDriveTrain (int[] left, int[] right, driveMotor dm, boolean invertLeft, boolean invertRight) {
         switch (dm) {
             case kSparkMaxBrushless:
@@ -87,6 +124,7 @@ public class DifferentialDriveTrain extends SubsystemBase {
         this.rightGroup.setInverted(invertRight);
         this.differentialDrive = new DifferentialDrive(leftGroup, rightGroup);
 
+        checkMotorInversions();
     }
 
     public DifferentialDriveTrain (int[] left, int[] right, driveMotor dm, SmartControllerProfile profile, boolean invertLeft, boolean invertRight) {
@@ -154,17 +192,22 @@ public class DifferentialDriveTrain extends SubsystemBase {
         for(int i = 0; rightArray.length > i; ++i) {
             System.out.println(i + "=" + rightArray[i].getInverted());
         }
+
+        checkMotorInversions();
     }
 
     public DifferentialDrive getDifferentialDrive() {
+        checkMotorInversions();
         return this.differentialDrive;
     }
 
     public DriveTrainDirection getDirection() {
+        checkMotorInversions();
         return this.direction;
     }
 
     public void setDirection(DriveTrainDirection direction) {
+        checkMotorInversions();
         this.direction = direction;
     }
 

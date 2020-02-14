@@ -20,7 +20,6 @@ public class ArcadeDrive extends CommandBase {
     @Override
     public void execute() {
         this.differentialDriveTrain.getDifferentialDrive().arcadeDrive(driveStick.getX(), driveStick.getY());
-        SmartDashboard.putNumber("direction", this.differentialDriveTrain.getDirection().getMod());
     }
 
 }
