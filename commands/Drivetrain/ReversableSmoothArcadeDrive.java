@@ -25,7 +25,7 @@ public class ReversableSmoothArcadeDrive extends CommandBase {
     @Override
     public void execute() {
         int mod = differentialDriveTrain.getDirection().getMod();
-        double x = driveStick.getX()*mod;
+        double x = driveStick.getX()*-1;
         double y = driveStick.getY()*mod;
 
         if(inDeaccel && 
