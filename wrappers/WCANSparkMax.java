@@ -6,6 +6,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import frc.robot.Constants;
+
 import edu.wpi.first.wpilibj.SpeedController;
 
 public class WCANSparkMax implements SpeedController {
