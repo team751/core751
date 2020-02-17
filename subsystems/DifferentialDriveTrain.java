@@ -97,12 +97,10 @@ public class DifferentialDriveTrain extends SubsystemBase {
 
 
                 for (int i = 0; i < leftArray.length; i++) {
-                    System.out.println("left = " + left[i]);
                     leftArray[i] = new WCANSparkMax(left[i], MotorType.kBrushless);
                     leftArray[i].setInverted(false);
                 }
                 for (int i = 0; i < rightArray.length; i++) {
-                    System.out.println("left = " + right[i]);
                     rightArray[i] = new WCANSparkMax(right[i], MotorType.kBrushless);
                     rightArray[i].setInverted(false);
                 }
@@ -147,13 +145,6 @@ public class DifferentialDriveTrain extends SubsystemBase {
         }
 
         this.differentialDrive = new DifferentialDrive(leftGroup, rightGroup);
-
-        for(int i = 0; leftArray.length > i; ++i) {
-            System.out.println(i + "=" + leftArray[i].getInverted());
-        }
-        for(int i = 0; rightArray.length > i; ++i) {
-            System.out.println(i + "=" + rightArray[i].getInverted());
-        }
     }
 
     public DifferentialDrive getDifferentialDrive() {
