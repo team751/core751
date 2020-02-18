@@ -6,17 +6,21 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.core751.subsystems.LightStrip;
+import frc.robot.core751.subsystems.LightStrip.PostProccessingEffects;
 
 public class TeamColorLights extends CommandBase{
 
-    private LightStrip lightStrip;
+    private LightStrip[] lightStrips;
     private Alliance alliance;
     private int[] allianceColor;
 
-    public TeamColorLights(LightStrip lightStrip) {
-        this.lightStrip = lightStrip;
+    public TeamColorLights(LightStrip[] lightStrips) {
+        this.lightStrips = lightStrips;
 
-        addRequirements(lightStrip);
+        for (LightStrip l : lightStrips) {
+            addRequirements(l);
+        }
+        
 
     }
 
@@ -35,19 +39,20 @@ public class TeamColorLights extends CommandBase{
             break;
         }
 
-        for (int i = 0; i < lightStrip.length; i++) {
-            this.lightStrip.setHSVWave(i, 2, this.allianceColor);
+        for (LightStrip l : lightStrips) {
+            l.fillHSV(this.allianceColor[0], this.allianceColor[1], this.allianceColor[2]);
+            l.clearEffects();
+            l.setEffect(PostProccessingEffects.WAVE);
+            l.update();
         }
-        this.lightStrip.update();
-        this.lightStrip.start();
+        
     }
 
     @Override
     public void execute() {
-        for (int i = 0; i < lightStrip.length; i++) {
-            this.lightStrip.setHSVWave(i, 2, this.allianceColor);
+        for (LightStrip l : lightStrips) {
+            l.update();
         }
-        this.lightStrip.update();
     }
 
     
