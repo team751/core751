@@ -78,10 +78,10 @@ public class LightStrip extends SubsystemBase {
             if (effects[PostProccessingEffects.WAVE.ordinal()]) {
                 switch(this.orientation) {
                     case FORWARD:
-                        this.postEffectLEDS[i][2] = (int)(this.preEffectLEDS[i][2] * this.getWaveMod(i));
+                        this.postEffectLEDS[i][2] = (int)(this.preEffectLEDS[i][2] * this.getWaveMod(i * DifferentialDriveTrain.direction.getMod()));
                     break;
                     case BACKWARD:
-                        this.postEffectLEDS[i][2] = (int)(this.preEffectLEDS[i][2] * this.getWaveMod(-i));
+                        this.postEffectLEDS[i][2] = (int)(this.preEffectLEDS[i][2] * this.getWaveMod(-i* DifferentialDriveTrain.direction.getMod()));
                     break;
                     case HORIZONTAL:
                         if (i < length/2) {
