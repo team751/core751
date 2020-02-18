@@ -13,10 +13,11 @@ import frc.robot.Constants;
 
 public class CappedSpeedControllerGroup extends SpeedControllerGroup {
 
-    private double speedCap = Constants.DefaultSpeedCap;
+    private double speedCap;
 
-    public CappedSpeedControllerGroup(SpeedController speedController, SpeedController... speedControllers) {
+    public CappedSpeedControllerGroup(SpeedController speedController, double speedCap, SpeedController... speedControllers) {
         super(speedController, speedControllers);
+        this.speedCap = speedCap;
     }
 
     @Override
