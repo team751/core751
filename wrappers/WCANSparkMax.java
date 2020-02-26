@@ -4,6 +4,7 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.SpeedController;
 
@@ -27,6 +28,7 @@ public class WCANSparkMax implements SpeedController {
     public CANEncoder getEncoder(){
         return mot.getEncoder();
     }
+
 
     public void setSoftLimit(CANSparkMax.SoftLimitDirection direction, float limit){
         mot.setSoftLimit(direction, limit);
@@ -59,6 +61,22 @@ public class WCANSparkMax implements SpeedController {
 
     public CANPIDController getPIDController(){
         return mot.getPIDController();
+    }
+
+    public void setBreakMode(IdleMode mode) {
+        this.mot.setIdleMode(mode);
+    }
+
+    public void setOpenLoopRampRate(double rate) {
+        this.mot.setOpenLoopRampRate(rate);
+    }
+
+    public void setClosedLoopRampRate(double rate) {
+        this.mot.setClosedLoopRampRate(rate);
+    }
+
+    public void setCurrentLimit(int limit) {
+        this.mot.setSmartCurrentLimit(limit);
     }
 
 }
