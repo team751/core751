@@ -17,7 +17,10 @@ public class TeamColorLights extends CommandBase{
     public TeamColorLights(LightStrip[] lightStrips) {
         this.lightStrips = lightStrips;
 
-        addRequirements(lightStrips);
+        for (LightStrip l : lightStrips) {
+            addRequirements(l);
+        }
+        
 
     }
 
@@ -37,11 +40,12 @@ public class TeamColorLights extends CommandBase{
         }
 
         for (LightStrip l : lightStrips) {
+            l.fillHSV(this.allianceColor[0], this.allianceColor[1], this.allianceColor[2]);
             l.clearEffects();
             l.setEffect(PostProccessingEffects.WAVE);
-            l.fillHSV(this.allianceColor[0], this.allianceColor[0], this.allianceColor[0]);
             l.update();
         }
+        
     }
 
     @Override

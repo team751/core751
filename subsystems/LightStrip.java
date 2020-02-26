@@ -9,6 +9,8 @@ public class LightStrip extends SubsystemBase {
 
     private AddressableLED LED;
     public int length;
+    private int[][] preEffectLEDS;
+    private int[][] postEffectLEDS;
     public AddressableLEDBuffer buffer;
     public int tic;
     private boolean[] effects;
@@ -34,6 +36,10 @@ public class LightStrip extends SubsystemBase {
         this.LED.setLength(length);
         this.length = length;
         this.buffer = new AddressableLEDBuffer(length);
+        this.effects = new boolean[PostProccessingEffects.values().length];
+        this.preEffectLEDS = new int[length][3];
+        this.postEffectLEDS = new int[length][3];
+        this.cycleCount = length/5;
         this.tic = 0;
         this.postEffectLEDS = new int[length][3];
         this.preEffectLEDS = new int [length][3];
@@ -63,16 +69,13 @@ public class LightStrip extends SubsystemBase {
     }
 
     public void setHSV(int i, int h, int s, int v) {
-        this.buffer.setHSV(i, h/2, s, v);
+        this.buffer.setHSV(i, h, s, v);
     }
 
-    public void setHSVWave(int i, int cycleCount, int h, int s, int v) {
-        int ni = i + tic/5;
-        ni %= this.length;
-        
-        v = (int) (v *   (  (Math.cos( (((double)(ni))/this.length)*cycleCount*2  * Math.PI )  + 2 )  /3)    );
-        
-        this.setHSV(i, h, s, v);
+    public void clearEffects() {
+        for (int i = 0; i < effects.length; i++) {
+            effects[i] = false;
+        }
     }
 
     private void postProccessing() {
