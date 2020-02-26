@@ -40,7 +40,7 @@ public class DifferentialDriveTrain extends SubsystemBase {
 
     private SpeedController[] controllers;
 
-    private DriveTrainDirection direction = DriveTrainDirection.FORWARD;
+    public static DriveTrainDirection direction = DriveTrainDirection.FORWARD;
 
     private static SpeedControllerGroup arrayToGroup(SpeedController[] sp) {
         //There has to be a better way to do this
