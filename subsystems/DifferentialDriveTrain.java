@@ -1,6 +1,5 @@
 package frc.robot.core751.subsystems;
 
-import com.revrobotics.SparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 

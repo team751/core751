@@ -20,8 +20,6 @@ public class TeamColorLights extends CommandBase{
         for (LightStrip l : lightStrips) {
             addRequirements(l);
         }
-        
-
     }
 
     @Override
@@ -32,7 +30,7 @@ public class TeamColorLights extends CommandBase{
                 this.allianceColor = new int[]{0, 255, 255};
             break;
             case Blue:
-                this.allianceColor = new int[]{240, 255, 255};
+                this.allianceColor = new int[]{100, 255, 255};
             break;
             default:
                 this.allianceColor = new int[]{300, 255, 255};
@@ -54,6 +52,4 @@ public class TeamColorLights extends CommandBase{
             l.update();
         }
     }
-
-    
 }

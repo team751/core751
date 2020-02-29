@@ -17,8 +17,6 @@ public class LightStrip extends SubsystemBase {
     private Orientation orientation;
     public int cycleCount = 1;
     public int hueShiftSpeed = 7;
-    public int [][] postEffectLEDS;
-    public int [][] preEffectLEDS;
 
     public enum Orientation {
         FORWARD,
@@ -70,12 +68,6 @@ public class LightStrip extends SubsystemBase {
 
     public void setHSV(int i, int h, int s, int v) {
         this.buffer.setHSV(i, h, s, v);
-    }
-
-    public void clearEffects() {
-        for (int i = 0; i < effects.length; i++) {
-            effects[i] = false;
-        }
     }
 
     private void postProccessing() {
@@ -138,6 +130,7 @@ public class LightStrip extends SubsystemBase {
 
     private void copyToBuffer() {
         for (int i = 0; i < length; i++) {
+            //this.buffer.setHSV(i, this.preEffectLEDS[i][0], this.preEffectLEDS[i][0], this.preEffectLEDS[i][0]);
             this.buffer.setHSV(i, this.postEffectLEDS[i][0], this.postEffectLEDS[i][1], this.postEffectLEDS[i][2]);
         }
     }
@@ -151,8 +144,4 @@ public class LightStrip extends SubsystemBase {
             this.effects[i] = false;
         }
     }
-
-
-    
-
 }
