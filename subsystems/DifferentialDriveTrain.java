@@ -134,6 +134,7 @@ public class DifferentialDriveTrain extends SubsystemBase {
 
     public DifferentialDriveTrain (int[] left, int[] right, driveMotor dm, SmartControllerProfile profile, boolean invertLeft, boolean invertRight) {
         bno055 = new ArduinoGyro();
+        System.out.println("initalized");
         
         switch (dm) {
             case kSparkMaxBrushless:
@@ -206,6 +207,12 @@ public class DifferentialDriveTrain extends SubsystemBase {
 
             differentialDriveOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
 
+            for(int i = 0; controllers.length > i; ++i) {
+                System.out.println(i + "=" + controllers[i].getInverted());
+            }
+            System.out.println("left=" + leftGroup.getInverted());
+            System.out.println("right=" + rightGroup.getInverted());
+
             return;
         } else {
             if(((BNO055)(bno055)).isSensorPresent()) {
@@ -245,8 +252,9 @@ public class DifferentialDriveTrain extends SubsystemBase {
     }
 
     public void setVolts(double leftVolts, double rightVolts) {
+        System.out.println("left " + leftVolts + " right " + rightVolts);
         leftGroup.setVoltage(leftVolts);
-        rightGroup.setVoltage(-rightVolts);
+        //rightGroup.setVoltage(rightVolts);
     }
 
     public void updateOdometry() {
