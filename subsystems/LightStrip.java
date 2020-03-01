@@ -7,16 +7,17 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LightStrip extends SubsystemBase {
 
-    private AddressableLED LED;
+    private static AddressableLED LED;
     public int length;
     private int[][] preEffectLEDS;
     private int[][] postEffectLEDS;
-    public AddressableLEDBuffer buffer;
+    public static AddressableLEDBuffer buffer;
     public int tic;
     private boolean[] effects;
     private Orientation orientation;
     public int cycleCount = 1;
     public int hueShiftSpeed = 7;
+    public int startIndex;
 
     public enum Orientation {
         FORWARD,
@@ -29,11 +30,18 @@ public class LightStrip extends SubsystemBase {
         HUE_SHIFT;
     }
 
-    public LightStrip(int port, int length, Orientation orientation) {
-        this.LED = new AddressableLED(port);
-        this.LED.setLength(length);
+    public static void initializeStrip(int port, int length) {
+        LightStrip.LED = new AddressableLED(port);
+        LightStrip.LED.setLength(length);
+        LightStrip.buffer = new AddressableLEDBuffer(length);
+    }
+
+    public static void pushBuffer() {
+        LED.setData(buffer);
+    }
+
+    public LightStrip(int startIndex, int length, Orientation orientation) {
         this.length = length;
-        this.buffer = new AddressableLEDBuffer(length);
         this.effects = new boolean[PostProccessingEffects.values().length];
         this.preEffectLEDS = new int[length][3];
         this.postEffectLEDS = new int[length][3];
@@ -43,15 +51,15 @@ public class LightStrip extends SubsystemBase {
         this.preEffectLEDS = new int [length][3];
         this.orientation = orientation;
         this.effects = new boolean[PostProccessingEffects.values().length];
-        this.start();
+        this.startIndex = startIndex;
     }
 
-    public void start() {
-        this.LED.start();
+    public static void start() {
+        LED.start();
     }
 
-    public void stop() {
-        this.LED.stop();
+    public static void stop() {
+        LED.stop();
     }
 
     public void advanceTic(){
@@ -62,12 +70,11 @@ public class LightStrip extends SubsystemBase {
     public void update() {
         this.postProccessing();
         this.copyToBuffer();
-        this.LED.setData(this.buffer);
         this.advanceTic();
     }
 
     public void setHSV(int i, int h, int s, int v) {
-        this.buffer.setHSV(i, h, s, v);
+        buffer.setHSV(i, h, s, v);
     }
 
     private void postProccessing() {
@@ -131,7 +138,7 @@ public class LightStrip extends SubsystemBase {
     private void copyToBuffer() {
         for (int i = 0; i < length; i++) {
             //this.buffer.setHSV(i, this.preEffectLEDS[i][0], this.preEffectLEDS[i][0], this.preEffectLEDS[i][0]);
-            this.buffer.setHSV(i, this.postEffectLEDS[i][0], this.postEffectLEDS[i][1], this.postEffectLEDS[i][2]);
+            buffer.setHSV(i + this.startIndex, this.postEffectLEDS[i][0], this.postEffectLEDS[i][1], this.postEffectLEDS[i][2]);
         }
     }
 
