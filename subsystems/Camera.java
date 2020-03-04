@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Camera extends SubsystemBase {
     int m_activeDevice;
-    UsbCamera[] m_usbCameras;
+    static UsbCamera[] m_usbCameras;
 
     public Camera(int device) {
         m_activeDevice = device;
@@ -15,7 +15,7 @@ public class Camera extends SubsystemBase {
         m_usbCameras[device] = CameraServer.getInstance().startAutomaticCapture("USB Camera 0", device);
     }
 
-    public void switchCamera(int toDeviceNum) {
+    public static void switchCamera(int toDeviceNum) {
         if(m_usbCameras[toDeviceNum] != null) {
             CameraServer.getInstance().startAutomaticCapture(m_usbCameras[toDeviceNum]);
         } else {
