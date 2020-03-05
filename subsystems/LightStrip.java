@@ -47,10 +47,7 @@ public class LightStrip extends SubsystemBase {
         this.postEffectLEDS = new int[length][3];
         this.cycleCount = length/5;
         this.tic = 0;
-        this.postEffectLEDS = new int[length][3];
-        this.preEffectLEDS = new int [length][3];
         this.orientation = orientation;
-        this.effects = new boolean[PostProccessingEffects.values().length];
         this.startIndex = startIndex;
     }
 
@@ -136,8 +133,9 @@ public class LightStrip extends SubsystemBase {
     }
 
     private void copyToBuffer() {
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < this.length; i++) {
             //this.buffer.setHSV(i, this.preEffectLEDS[i][0], this.preEffectLEDS[i][0], this.preEffectLEDS[i][0]);
+
             buffer.setHSV(i + this.startIndex, this.postEffectLEDS[i][0], this.postEffectLEDS[i][1], this.postEffectLEDS[i][2]);
         }
     }
