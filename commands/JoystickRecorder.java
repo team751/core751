@@ -22,15 +22,19 @@ public class JoystickRecorder extends CommandBase {
     public class Node{
         Double xAxis;
         Double yAxis;
-        Integer button;
-        public Node(Double xAxis,Double yAxis,Integer button){
+        int[] buttons;
+        public Node(Double xAxis,Double yAxis,int[] buttons){
             this.xAxis = xAxis;
             this.yAxis = yAxis;
-            this.button = button;
+            this.buttons = buttons;
         }
         @Override
         public String toString(){
-            return "{" + xAxis + "," + yAxis + "," + button +"}";
+            String temp = "{" + xAxis + "," + yAxis;
+          for(int num:buttons){
+            temp += "," + num;
+          }
+          return temp + "}";
         }
 
     }
@@ -42,7 +46,7 @@ public class JoystickRecorder extends CommandBase {
     @Override
     public void execute() {
         if(joystick.getButtonsPressed() != null){
-            list.add(new Node(joystick.getRawAxis(0),joystick.getRawAxis(1),joystick.getButtonsPressed()[0]));//issue only one button can be pressed
+            list.add(new Node(joystick.getRawAxis(0),joystick.getRawAxis(1),joystick.getButtonsPressed()));//issue only one button can be pressed
         }else{
             list.add(new Node(joystick.getRawAxis(0),joystick.getRawAxis(1),null));
         }
