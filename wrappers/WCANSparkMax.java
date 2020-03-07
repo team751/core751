@@ -7,17 +7,12 @@ import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class WCANSparkMax implements SpeedController {
     private CANSparkMax mot;
-    private double speedCap;
 
     public WCANSparkMax(int deviceID, CANSparkMaxLowLevel.MotorType type){
         this.mot = new CANSparkMax(deviceID, type);
-        this.speedCap = 1.0;
-
-        SmartDashboard.putNumber("Speed Cap", this.speedCap);
     }
 
     @Override
@@ -27,13 +22,7 @@ public class WCANSparkMax implements SpeedController {
 
     @Override
     public void set(double speed) {
-        double speedCap = SmartDashboard.getNumber("Speed Cap", 1.0);
-
-        if(speed < 0) {
-            speedCap = -speedCap;
-        }
-
-        mot.set(Math.min(speed, speedCap));
+        mot.set(speed);
     }
    
     public CANEncoder getEncoder(){
