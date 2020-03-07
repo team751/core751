@@ -61,7 +61,7 @@ public class OverrideableJoystick extends Joystick{
     @Override
     public boolean getRawButtonPressed(int button) {
         if(buttons[button]){
-            buttons[button] = false;
+            buttons[button] = held[button];
             return true;
         } else {
             return super.getRawButtonPressed(button);
@@ -78,12 +78,11 @@ public class OverrideableJoystick extends Joystick{
     }
 
     public int[] getButtonsPressed(){
-        int[] temp = /*new int[buttons.length]*/ {1};
-        /*int count = 0;
+        int[] temp = new int[buttons.length];
+        int count = 0;
         for(int i = 0; i < buttons.length; i++){
-            if(buttons[i]){
-                temp[count] = i;
-                count++;
+            if(getRawButton(i)){
+                temp[count++] = i;
             }
         }
         if(count == 0) return null;
@@ -91,8 +90,7 @@ public class OverrideableJoystick extends Joystick{
         for(int i = 0; i < count; i++){
             returnArray[i] = temp[i];
         }
-        return returnArray;*/ return temp;
-        
+        return returnArray;
     }
 
     @Override
@@ -101,7 +99,7 @@ public class OverrideableJoystick extends Joystick{
             return this.axis[axisNum];
         } else {
             return super.getRawAxis(axisNum);
-        }
+        }    
     }
 }
 

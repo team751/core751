@@ -25,8 +25,8 @@ public class ReversableArcadeDrive extends CommandBase {
     @Override
     public void execute() {
         int mod = differentialDriveTrain.getDirection().getMod();
-        double x = -driveStick.getRawAxis(4);
-        double y = driveStick.getRawAxis(5)*mod;
+        double x = -driveStick.getRawAxis(0);
+        double y = driveStick.getRawAxis(1)*mod;
 
         if(inDeaccel && 
             edu.wpi.first.wpilibj.Timer.getFPGATimestamp() - startStepDeaccelTime >= 

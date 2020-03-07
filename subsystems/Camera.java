@@ -12,12 +12,12 @@ public class Camera extends SubsystemBase {
         m_activeDevice = device;
         m_usbCameras = new UsbCamera[UsbCamera.enumerateUsbCameras().length];
 
-        m_usbCameras[device] = CameraServer.getInstance().startAutomaticCapture("USB Camera 0", device);
+        m_usbCameras[device] = CameraServer.getInstance().startAutomaticCapture("USB Camera " + device, device);
     }
 
     public static void switchCamera(int toDeviceNum) {
         if(m_usbCameras[toDeviceNum] != null) {
-            CameraServer.getInstance().startAutomaticCapture(m_usbCameras[toDeviceNum]);
+            CameraServer.getInstance().getServer().setSource(m_usbCameras[toDeviceNum]);
         } else {
             m_usbCameras[toDeviceNum] = CameraServer.getInstance().startAutomaticCapture("USB Camera 0", toDeviceNum);
         }

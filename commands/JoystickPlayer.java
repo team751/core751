@@ -22,7 +22,7 @@ public class JoystickPlayer extends CommandBase {
     }
     @Override
     public void execute() {
-        if(!(rover >= array.length)){
+        if(rover < array.length){
             for(int i = 0; i < array[rover].length; i++){
                 switch(i){
                     case 0:
@@ -37,5 +37,10 @@ public class JoystickPlayer extends CommandBase {
                 }
             }
         }
+        joystick.clearAixs();
+    }
+    @Override
+    public void end(boolean interrupted) {
+       joystick.clearAixs();
     }
 }

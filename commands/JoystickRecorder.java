@@ -12,9 +12,7 @@ import java.util.LinkedList;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.core751.wrappers.OverrideableJoystick;
 
-/**
- * Add your docs here.
- */
+
 public class JoystickRecorder extends CommandBase {
     public OverrideableJoystick joystick;
     public LinkedList<Node> list = new LinkedList<>();
@@ -31,9 +29,11 @@ public class JoystickRecorder extends CommandBase {
         @Override
         public String toString(){
             String temp = "{" + xAxis + "," + yAxis;
+            if(buttons != null){
           for(int num:buttons){
             temp += "," + num;
           }
+        }
           return temp + "}";
         }
 
@@ -45,18 +45,14 @@ public class JoystickRecorder extends CommandBase {
 
     @Override
     public void execute() {
-        if(joystick.getButtonsPressed() != null){
-            list.add(new Node(joystick.getRawAxis(0),joystick.getRawAxis(1),joystick.getButtonsPressed()));//issue only one button can be pressed
-        }else{
-            list.add(new Node(joystick.getRawAxis(0),joystick.getRawAxis(1),null));
-        }
+            list.add(new Node(joystick.getRawAxis(0),joystick.getRawAxis(1),joystick.getButtonsPressed()));
     }
     
     @Override 
     public String toString(){
         String temp = "{";
         for(Node node : list){
-            temp += node + ",";
+            temp += node.toString() + ",";
         } 
         temp = temp.substring(0,temp.length() - 1) + "}";
         return temp;
