@@ -27,17 +27,19 @@ public class JoystickPlayer extends CommandBase {
                 switch(i){
                     case 0:
                         joystick.setX(array[rover][0]);
+                        System.out.println(array[rover][0]);
                         break;
                     case 1:
                         joystick.setY(array[rover][1]);
+                        System.out.println(array[rover][1]);
                         break;
                     default:
                         joystick.press((int)(double)(array[rover][i]));//boi
                         break;
                 }
             }
+            rover++;
         }
-        joystick.clearAixs();
     }
     @Override
     public void end(boolean interrupted) {

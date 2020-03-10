@@ -29,11 +29,11 @@ public class OverrideableJoystick extends Joystick{
     }
 
     public void setX(Double x){
-        setAxis(x, null);
+        this.axis[0] = x;
     }
 
     public void setY(Double y){
-        setAxis(null, y);
+        this.axis[1] = y;
     }
 
     /**

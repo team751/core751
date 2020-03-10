@@ -28,13 +28,13 @@ public class JoystickRecorder extends CommandBase {
         }
         @Override
         public String toString(){
-            String temp = "{" + xAxis + "," + yAxis;
+            String temp = "{" + xAxis + "D," + yAxis;
             if(buttons != null){
           for(int num:buttons){
-            temp += "," + num;
+            temp += "D," + num;
           }
         }
-          return temp + "}";
+          return temp + "D}";
         }
 
     }
