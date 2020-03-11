@@ -1,6 +1,7 @@
 package frc.robot.core751.commands.Drivetrain;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.core751.subsystems.DifferentialDriveTrain;
@@ -16,50 +17,39 @@ public class ReversableArcadeDrive extends CommandBase {
 
     private Joystick driveStick;
     private DifferentialDriveTrain differentialDriveTrain;
+    private double speedCap;
 
     public ReversableArcadeDrive(OverrideableJoystick driveStick, DifferentialDriveTrain differentialDriveTrain) {
         this.driveStick = driveStick;
         this.differentialDriveTrain = differentialDriveTrain;
+        this.speedCap = 1.0;
+
+        SmartDashboard.putNumber("Speed Cap", this.speedCap);
         addRequirements(differentialDriveTrain);
     }
 
     @Override
     public void execute() {
         int mod = differentialDriveTrain.getDirection().getMod();
-        double x = -driveStick.getRawAxis(0);
-        double y = driveStick.getRawAxis(1)*mod;
 
-        if(inDeaccel && 
-            edu.wpi.first.wpilibj.Timer.getFPGATimestamp() - startStepDeaccelTime >= 
-            Constants.maxSparkDeccelPeriod / Constants.sparkDeccelSteps) {
-            startStepDeaccelTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp(); 
+        double x = -driveStick.getRawAxis(4);
+        double y = driveStick.getRawAxis(5)*mod;
 
-            previousYDistance += (targetYDistance - startYDistance) / Constants.sparkDeccelSteps;
+        speedCap = SmartDashboard.getNumber("Speed Cap", 1.0);
 
-            if(Math.abs(targetYDistance - y) >= Constants.minPauseDeaccelThreshold){
-                inDeaccel = false;
-                return;
-            }
-
-            if(previousYDistance == targetYDistance) {
-                inDeaccel = false;
-            }
+        if(x < 0) {
+            x = Math.max(-speedCap, x);
         } else {
-            if((previousYDistance >= 0 && previousYDistance - x >= Constants.sparkDeccelThreshold) ||
-                (previousYDistance <= -1 && y - previousYDistance >= Constants.sparkDeccelThreshold)) {
-                inDeaccel = true;
-                startYDistance = previousYDistance;
-                targetYDistance = y;
-
-                previousYDistance += (targetYDistance - startYDistance) / Constants.sparkDeccelSteps;
-
-                startStepDeaccelTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp(); //seconds
-            } else {
-                previousYDistance = y;
-            }
+            x = Math.min(speedCap, x);
         }
 
-        this.differentialDriveTrain.getDifferentialDrive().arcadeDrive(x, previousYDistance);
+        if(y < 0) {
+            y = Math.max(-speedCap, y);
+        } else {
+            y = Math.min(speedCap, y);
+        }
+
+        this.differentialDriveTrain.getDifferentialDrive().arcadeDrive(x, y);
     }
 
 }
