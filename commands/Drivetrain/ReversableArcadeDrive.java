@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.core751.subsystems.DifferentialDriveTrain;
+import frc.robot.core751.wrappers.OverrideableJoystick;
 
 public class ReversableArcadeDrive extends CommandBase {
 
@@ -16,7 +17,7 @@ public class ReversableArcadeDrive extends CommandBase {
     private Joystick driveStick;
     private DifferentialDriveTrain differentialDriveTrain;
 
-    public ReversableArcadeDrive(Joystick driveStick, DifferentialDriveTrain differentialDriveTrain) {
+    public ReversableArcadeDrive(OverrideableJoystick driveStick, DifferentialDriveTrain differentialDriveTrain) {
         this.driveStick = driveStick;
         this.differentialDriveTrain = differentialDriveTrain;
         addRequirements(differentialDriveTrain);
