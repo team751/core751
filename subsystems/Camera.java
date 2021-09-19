@@ -5,10 +5,10 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Camera extends SubsystemBase {
-    int activeDevice;
-    static UsbCamera[] usbCameras;
+    public static Integer activeDevice;
+    public static UsbCamera[] usbCameras;
 
-    public Camera(int device) {
+    public Camera(Integer device) {
         if(device == null){
             return;
         }

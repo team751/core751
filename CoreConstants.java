@@ -33,9 +33,8 @@ public final class CoreConstants{
       /*-------------/
      /----Camera----/
     /-------------*/
-
-    public static int frontCamera = null;
-    public static int backCamera = null;
-    Camera(frontCamera);
-    Camera(backCamera);
+    public static Integer frontCameraId = null;
+    public static Integer backCameraId = null;
+    public static Camera frontCamera = new Camera(frontCameraId);
+    public static Camera backCamera = new Camera(backCameraId);
 }

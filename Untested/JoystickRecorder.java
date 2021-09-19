@@ -60,6 +60,7 @@ public class JoystickRecorder extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         System.out.println(this);
+        //Lol fix this
     }
    
 }

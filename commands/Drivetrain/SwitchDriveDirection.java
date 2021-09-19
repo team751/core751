@@ -8,10 +8,16 @@ import frc.robot.core751.subsystems.Camera;
 public class SwitchDriveDirection extends CommandBase {
 
     private DifferentialDriveTrain differentialDriveTrain;
-    private Integer frontCamera = Constants.Camera1;
-    private Integer backCamera = Constants.Camera2;
+    private Integer frontCamera;
+    private Integer backCamera;
 
     public SwitchDriveDirection(DifferentialDriveTrain differentialDriveTrain) {
+        this(differentialDriveTrain,null,null);
+    }
+    public SwitchDriveDirection(DifferentialDriveTrain differentialDriveTrain,Integer camera) {
+        this(differentialDriveTrain,camera,null);
+    }
+    public SwitchDriveDirection(DifferentialDriveTrain differentialDriveTrain,Integer frontCamera,Integer backCamera) {
         this.differentialDriveTrain = differentialDriveTrain;
         this.frontCamera = frontCamera;
         this.backCamera = backCamera;
