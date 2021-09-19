@@ -1,5 +1,8 @@
 package frc.robot.core751.abstractClasses;
 
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import frc.robot.core751.subsystems.DifferentialDriveTrain.driveMotor;
+
 public abstract class GenericDriveTrain{
 
     public static enum DriveTrainDirection {
@@ -13,8 +16,6 @@ public abstract class GenericDriveTrain{
         }
 
     }
-
-    public abstract DifferentialDriveTrain(int[] left, int[] right, driveMotor dm, boolean invertLeft, boolean invertRight);
 
     public abstract DifferentialDrive getDifferentialDrive();
 

@@ -4,10 +4,11 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.core751.CoreConstants;
 import frc.robot.core751.subsystems.DifferentialDriveTrain;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class ReversableSmoothArcadeDrive extends CommandBase {
+public class ReversableArcadeDrive extends CommandBase {
 
-    private bool smoothing = CoreConstants.smoothing;
+    private Boolean smoothing = CoreConstants.smoothing;
 
     private Joystick driveStick;
     private DifferentialDriveTrain differentialDriveTrain;
@@ -20,7 +21,7 @@ public class ReversableSmoothArcadeDrive extends CommandBase {
 
     private double speedCap;
 
-    public ReversableSmoothArcadeDrive(Joystick driveStick, DifferentialDriveTrain differentialDriveTrain) {
+    public ReversableArcadeDrive(Joystick driveStick, DifferentialDriveTrain differentialDriveTrain) {
         this.driveStick = driveStick;
         this.differentialDriveTrain = differentialDriveTrain;
         addRequirements(differentialDriveTrain);

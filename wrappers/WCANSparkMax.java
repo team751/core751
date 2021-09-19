@@ -6,15 +6,14 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.CANSparkMax.IdleMode;
 
-import frc.robot.Constants;
-
+import frc.robot.core751.CoreConstants;
 import edu.wpi.first.wpilibj.SpeedController;
 
 public class WCANSparkMax implements SpeedController {
     private CANSparkMax mot;
 
-    public WCANSparkMax(int deviceID, CANSparkMaxLowLevel.MotorType type){
-        this.mot = new CANSparkMax(deviceID, type);
+    public WCANSparkMax(int deviceID, com.revrobotics.CANSparkMaxLowLevel.MotorType kbrushless){
+        this.mot = new CANSparkMax(deviceID, kbrushless);
     }
 
     @Override
