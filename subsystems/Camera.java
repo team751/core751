@@ -5,21 +5,22 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Camera extends SubsystemBase {
-    int m_activeDevice;
-    static UsbCamera[] m_usbCameras;
+    int activeDevice;
+    static UsbCamera[] usbCameras;
 
     public Camera(int device) {
-        m_activeDevice = device;
-        m_usbCameras = new UsbCamera[UsbCamera.enumerateUsbCameras().length];
+        activeDevice = device;
+        usbCameras = new UsbCamera[UsbCamera.enumerateUsbCameras().length];
 
-        m_usbCameras[device] = CameraServer.getInstance().startAutomaticCapture("USB Camera " + device, device);
+        usbCameras[device] = CameraServer.getInstance().startAutomaticCapture("USB Camera " + device, device);
     }
 
     public static void switchCamera(int toDeviceNum) {
-        if(m_usbCameras[toDeviceNum] != null) {
-            CameraServer.getInstance().getServer().setSource(m_usbCameras[toDeviceNum]);
+        if(usbCameras[toDeviceNum] != null && activeDevice != toDeviceNum) {
+            CameraServer.getInstance().getServer().setSource(usbCameras[toDeviceNum]);
+            activeDevice = toDeviceNum;
         } else {
-            m_usbCameras[toDeviceNum] = CameraServer.getInstance().startAutomaticCapture("USB Camera 0", toDeviceNum);
+            usbCameras[toDeviceNum] = CameraServer.getInstance().startAutomaticCapture("USB Camera " + toDeviceNum, toDeviceNum);
         }
     }
 }
