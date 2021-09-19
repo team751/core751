@@ -22,5 +22,7 @@ public abstract class GenericDriveTrain{
         return DriveTrainDirection.FORWARD;
     }
     
-    public void setDirection(DriveTrainDirection direction);
+    public void setDirection(DriveTrainDirection direction){
+        return;
+    }
 }

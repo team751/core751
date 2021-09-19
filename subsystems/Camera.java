@@ -9,6 +9,9 @@ public class Camera extends SubsystemBase {
     static UsbCamera[] usbCameras;
 
     public Camera(int device) {
+        if(device == null){
+            return;
+        }
         activeDevice = device;
         usbCameras = new UsbCamera[UsbCamera.enumerateUsbCameras().length];
 
