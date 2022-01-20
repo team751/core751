@@ -1,6 +1,6 @@
 package frc.robot.core751.subsystems;
 
-import com.revrobotics.SparkMax;
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.core751.wrappers.WCANSparkMax;
 
 public class DifferentialDriveTrain extends SubsystemBase {
 
@@ -60,13 +59,13 @@ public class DifferentialDriveTrain extends SubsystemBase {
     public DifferentialDriveTrain (int[] left, int[] right, driveMotor dm, boolean invertLeft, boolean invertRight) {
         switch (dm) {
             case kSparkMaxBrushless:
-                leftArray = new WCANSparkMax[left.length];
-                rightArray = new WCANSparkMax[right.length];
+                leftArray = new CANSparkMax[left.length];
+                rightArray = new CANSparkMax[right.length];
                 for (int i = 0; i < leftArray.length; i++) {
-                    leftArray[i] = new WCANSparkMax(left[i], MotorType.kBrushless);
+                    leftArray[i] = new CANSparkMax(left[i], MotorType.kBrushless);
                 }
                 for (int i = 0; i < rightArray.length; i++) {
-                    rightArray[i] = new WCANSparkMax(right[i], MotorType.kBrushless);
+                    rightArray[i] = new CANSparkMax(right[i], MotorType.kBrushless);
                 }
             break;
             case kPWMVictorSPX:
@@ -93,16 +92,16 @@ public class DifferentialDriveTrain extends SubsystemBase {
     public DifferentialDriveTrain (int[] left, int[] right, driveMotor dm, SmartControllerProfile profile, boolean invertLeft, boolean invertRight) {
         switch (dm) {
             case kSparkMaxBrushless:
-                leftArray = new WCANSparkMax[left.length];
-                rightArray = new WCANSparkMax[right.length];
+                leftArray = new CANSparkMax[left.length];
+                rightArray = new CANSparkMax[right.length];
 
 
                 for (int i = 0; i < leftArray.length; i++) {
-                    leftArray[i] = new WCANSparkMax(left[i], MotorType.kBrushless);
+                    leftArray[i] = new CANSparkMax(left[i], MotorType.kBrushless);
                     leftArray[i].setInverted(false);
                 }
                 for (int i = 0; i < rightArray.length; i++) {
-                    rightArray[i] = new WCANSparkMax(right[i], MotorType.kBrushless);
+                    rightArray[i] = new CANSparkMax(right[i], MotorType.kBrushless);
                     rightArray[i].setInverted(false);
                 }
             break;
@@ -133,11 +132,11 @@ public class DifferentialDriveTrain extends SubsystemBase {
         switch (dm) {
             case kSparkMaxBrushless:
                 for (SpeedController sc : this.controllers) {
-                    WCANSparkMax sMax = (WCANSparkMax)sc;
-                    if (profile.idle != null) sMax.setBreakMode(profile.idle);
+                    CANSparkMax sMax = (CANSparkMax)sc;
+                    if (profile.idle != null) sMax.setIdleMode(profile.idle);
                     if (profile.rate != 0) sMax.setOpenLoopRampRate(profile.rate);
                     if (profile.rate != 0) sMax.setClosedLoopRampRate(profile.rate);
-                    if (profile.limit != 0) sMax.setCurrentLimit(profile.limit);
+                    if (profile.limit != 0) sMax.setSmartCurrentLimit(profile.limit);
                 }
             break;
             case kPWMVictorSPX:

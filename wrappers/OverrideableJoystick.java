@@ -10,7 +10,7 @@ package frc.robot.core751.wrappers;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
- * Add your docs here.
+ * Walkie Slush 
  */
 public class OverrideableJoystick extends Joystick{
 
