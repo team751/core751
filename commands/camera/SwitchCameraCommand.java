@@ -1,6 +1,6 @@
 package frc.robot.core751.commands.camera;
 
-import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cscore.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.core751.subsystems.Camera;

@@ -4,7 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.PWMVictorSPX;
+import edu.wpi.first.wpilibj.motorcontrol.*;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -137,10 +137,8 @@ public class DifferentialDriveTrain extends SubsystemBase {
                     if (profile.rate != 0) sMax.setOpenLoopRampRate(profile.rate);
                     if (profile.rate != 0) sMax.setClosedLoopRampRate(profile.rate);
                     if (profile.limit != 0) sMax.setSmartCurrentLimit(profile.limit);
+                    sMax.close();
                 }
-            break;
-            case kPWMVictorSPX:
-                //TODO: Add suport for this
             break;
         }
 

@@ -1,5 +1,7 @@
 package frc.robot.core751;
 
+import javax.swing.text.StyledEditorKit.BoldAction;
+
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -40,6 +42,8 @@ public final class CoreConstants{
     public static int rightDrivetrainIDs[] = new int[] { 4, 5, 6 };
     public static DifferentialDriveTrain.SmartControllerProfile driveMotorProfile= new DifferentialDriveTrain.SmartControllerProfile(IdleMode.kCoast, 0.25, 35);
     public static DifferentialDriveTrain.driveMotor driveTrainMotorType = driveMotor.kSparkMaxBrushless;
+    public static boolean driveInvertLeft = false;
+    public static boolean driveInvertRight = false;
 
     public static double speedCap = 1.0;
     public static Boolean smoothing = true;

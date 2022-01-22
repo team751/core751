@@ -33,7 +33,7 @@ public class ReversableArcadeDrive extends CommandBase {
         double x = driveStick.getX()*-1;
         double y = driveStick.getY()*mod;
 
-        speedCap = SmartDashboard.getNumber("Speed Cap", 1.0);
+        speedCap = SmartDashboard.getNumber("Speed Cap", CoreConstants.speedCap);
         if(smoothing){ //With Smoothing
             if(inDeaccel && edu.wpi.first.wpilibj.Timer.getFPGATimestamp() - startStepDeaccelTime >= CoreConstants.maxSparkDeccelPeriod / CoreConstants.sparkDeccelSteps) {
                 startStepDeaccelTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp(); 

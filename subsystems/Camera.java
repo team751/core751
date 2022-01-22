@@ -1,6 +1,6 @@
 package frc.robot.core751.subsystems;
 
-import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cscore.*;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
