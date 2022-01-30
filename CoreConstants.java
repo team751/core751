@@ -1,7 +1,5 @@
 package frc.robot.core751;
 
-import javax.swing.text.StyledEditorKit.BoldAction;
-
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -10,15 +8,17 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.core751.subsystems.Camera;
 import frc.robot.core751.subsystems.DifferentialDriveTrain;
 import frc.robot.core751.subsystems.DifferentialDriveTrain.driveMotor;
+import frc.robot.core751.wrappers.OverrideableJoystick;
 
 public final class CoreConstants{
 
   public enum Controller { // Button mappings for the XBOX One controller
-    A(1), B(2), X(3), Y(4), LB(5), RB(6), LT(2), // Must use .getRawAxis()
+    A(1), B(2), X(3), Y(4), LB(5), RB(6), 
+    LT(2), // Must use .getRawAxis()
     RT(3), // Must use .getRaxAxis()
-    BACK(7), START(8), LEFT_AXIS_PRESS(9), // X-Axis: -1.000 to 1.000 (stick.GetX())
-                                           // Y-Axis: -1.000 to 1.000 (stick.GetY())
-    RIGHT_AXIS_PRESS(10);
+    BACK(7), START(8), 
+    LEFT_AXIS_PRESS(9), // X-Axis: -1.000 to 1.000 (stick.GetX())
+    RIGHT_AXIS_PRESS(10); // Y-Axis: -1.000 to 1.000 (stick.GetY())
 
     private int buttonNum;
 
@@ -30,12 +30,14 @@ public final class CoreConstants{
         return this.buttonNum;
     }
 
+    
+
 }
 
       /*-------------/
      /--DriveTrain--/
     /-------------*/
-    public static Joystick driverStick = new Joystick(CoreConstants.driveStickPort);
+    public static OverrideableJoystick driverStick = new OverrideableJoystick(CoreConstants.driveStickPort);
     public static int driverStickPort = 0;
 
     public static int leftDrivetrainIDs[] = new int[] { 1, 2, 3 };
@@ -45,7 +47,7 @@ public final class CoreConstants{
     public static boolean driveInvertLeft = false;
     public static boolean driveInvertRight = false;
 
-    public static double speedCap = 1.0;
+    public static double speedCap = 0.5;
     public static Boolean smoothing = true;
 
     public static double maxSparkDeccelPeriod = 1;//0.5;
