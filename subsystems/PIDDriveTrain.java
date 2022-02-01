@@ -164,7 +164,7 @@ public class PIDDriveTrain extends SubsystemBase {
     public void PIDDrive(double xAxis, double yAxis){  
         double mathedY = Math.pow(Math.cos(yAxis),2);   //nice naming lol
         double mathedX = Math.pow(Math.sin(xAxis),2);
-        
+
         leftPIDController.setSetpoint(mathedY+mathedX);
         rightPIDController.setSetpoint(mathedY-mathedX);
     }
@@ -175,6 +175,14 @@ public class PIDDriveTrain extends SubsystemBase {
        currentRightSpeed = rightPIDController.calculate(currentRightSpeed);
        leftGroup.set(currentLeftSpeed);
        rightGroup.set(currentRightSpeed);
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        currentLeftSpeed = leftPIDController.calculate(currentLeftSpeed);
+        currentRightSpeed = rightPIDController.calculate(currentRightSpeed);
+        System.out.println("Left: " + currentLeftSpeed);
+        System.out.println("Right: " + currentRightSpeed);
     }
 
 }
