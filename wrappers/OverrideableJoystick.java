@@ -42,7 +42,6 @@ public class OverrideableJoystick extends Joystick{
     public void clearAixs(){
         setAxis(null, null);
     }
-
     
 
     public void press(int button){
@@ -98,7 +97,12 @@ public class OverrideableJoystick extends Joystick{
         if(axisNum <= 1 && this.axis[axisNum] != null){
             return this.axis[axisNum];
         } else {
-            return super.getRawAxis(axisNum);
+            double axisVal = super.getRawAxis(axisNum);
+            if(axisVal <= 0.01){
+                return 0;
+            } else{
+                return axisVal;
+            }
         }    
     }
 }

@@ -5,8 +5,6 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.motorcontrol.*;
-import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -30,29 +28,31 @@ public class DifferentialDriveTrain extends SubsystemBase {
 
     }
 
-    public SpeedController[] leftArray;
-    public SpeedController[] rightArray;
+    public MotorController[] leftArray;
+    public MotorController[] rightArray;
 
-    private SpeedControllerGroup leftGroup;
-    private SpeedControllerGroup rightGroup;
+    private MotorControllerGroup leftGroup;
+    private MotorControllerGroup rightGroup;
 
     private DifferentialDrive differentialDrive;
 
-    private SpeedController[] controllers;
+    private MotorController[] controllers;
 
     private DriveTrainDirection direction = DriveTrainDirection.FORWARD;
 
-    private static SpeedControllerGroup arrayToGroup(SpeedController[] sp) {
-        //There has to be a better way to do this
+    private static MotorControllerGroup arrayToGroup(MotorController[] sp) {
+        //There might to be a better way to do this
         switch(sp.length) {
             case 4:
-                return new SpeedControllerGroup(sp[0], sp[1], sp[2], sp[3]);
+                return new MotorControllerGroup(sp[0], sp[1], sp[2], sp[3]);
             case 3:
-                return new SpeedControllerGroup(sp[0], sp[1], sp[2]);
+                return new MotorControllerGroup(sp[0], sp[1], sp[2]);
             case 2:
-                return new SpeedControllerGroup(sp[0], sp[1]);
+                return new MotorControllerGroup(sp[0], sp[1]);
+            case 1:
+                return new MotorControllerGroup(sp[0]);
             default:
-                return new SpeedControllerGroup(sp[0]);
+                return null;
         }
     }
 
@@ -81,7 +81,7 @@ public class DifferentialDriveTrain extends SubsystemBase {
         }
         this.leftGroup = arrayToGroup(leftArray);
         this.rightGroup = arrayToGroup(rightArray);
-        this.controllers = new SpeedController[this.leftArray.length + this.rightArray.length];
+        this.controllers = new MotorControllerGroup[this.leftArray.length + this.rightArray.length];
         
         this.leftGroup.setInverted(invertLeft);
         this.rightGroup.setInverted(invertRight);
@@ -121,7 +121,6 @@ public class DifferentialDriveTrain extends SubsystemBase {
         this.leftGroup.setInverted(invertLeft);
         this.rightGroup.setInverted(invertRight);
 
-        this.controllers = new SpeedController[this.leftArray.length + this.rightArray.length];
         for (int i = 0; i < leftArray.length; i++) {
             this.controllers[i] = this.leftArray[i];
         }
@@ -131,7 +130,7 @@ public class DifferentialDriveTrain extends SubsystemBase {
 
         switch (dm) {
             case kSparkMaxBrushless:
-                for (SpeedController sc : this.controllers) {
+                for (MotorController sc : this.controllers) {
                     CANSparkMax sMax = (CANSparkMax)sc;
                     if (profile.idle != null) sMax.setIdleMode(profile.idle);
                     if (profile.rate != 0) sMax.setOpenLoopRampRate(profile.rate);
@@ -139,6 +138,7 @@ public class DifferentialDriveTrain extends SubsystemBase {
                     if (profile.limit != 0) sMax.setSmartCurrentLimit(profile.limit);
                     sMax.close();
                 }
+            default: //Add more cases if needed
             break;
         }
 
