@@ -32,8 +32,7 @@ public class MotorTest extends SubsystemBase{
                 WPI_TalonFX talon = new WPI_TalonFX(id);
                 talon.configFactoryDefault();
                 talon.stopMotor();
-                talon.set(ControlMode.PercentOutput, 0.5);
-                System.out.println("uWu");
+                talon.set(ControlMode.PercentOutput, speed);
                 break;
             case Neo:
                 new CANSparkMax(id, MotorType.kBrushless).set(speed);
