@@ -16,7 +16,7 @@ public class OverrideableJoystick extends Joystick{
 
     public boolean[] buttons = new boolean[super.getButtonCount() + 1];//The index's start at 1
     public boolean[] held = new boolean[super.getButtonCount() + 1];
-    private Double[] axis = new Double[2];//Using Double not double so I can set it to null.
+    private Double[] axis = {null,null};//Using Double not double so I can set it to null.
 
 
     public OverrideableJoystick(final int port){
@@ -79,7 +79,7 @@ public class OverrideableJoystick extends Joystick{
     public int[] getButtonsPressed(){
         int[] temp = new int[buttons.length];
         int count = 0;
-        for(int i = 0; i < buttons.length; i++){
+        for(int i = 1; i < buttons.length; i++){
             if(getRawButton(i)){
                 temp[count++] = i;
             }
@@ -98,7 +98,7 @@ public class OverrideableJoystick extends Joystick{
             return this.axis[axisNum];
         } else {
             double axisVal = super.getRawAxis(axisNum);
-            if(axisVal <= 0.01){
+            if(Math.abs(axisVal) <= 0.01){
                 return 0;
             } else{
                 return axisVal;

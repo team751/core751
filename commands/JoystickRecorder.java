@@ -47,7 +47,7 @@ public class JoystickRecorder extends CommandBase {
 
     @Override
     public void execute() {
-            System.out.println(joystick.getRawAxis(0) + " " + joystick.getRawAxis(1) + " " + joystick.getButtonsPressed());
+            System.out.println(joystick.getX() + " " + joystick.getY() + " " + joystick.getButtonsPressed());
             list.add(new Node(joystick.getRawAxis(0),joystick.getRawAxis(1),joystick.getButtonsPressed()));
     }
     

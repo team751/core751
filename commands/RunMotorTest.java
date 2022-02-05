@@ -14,6 +14,5 @@ public class RunMotorTest extends CommandBase{
     @Override
     public void initialize() {
         mTest.set(1);
-        
     }
 }
