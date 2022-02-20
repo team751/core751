@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.core751.subsystems.DifferentialDriveTrain;
+import frc.robot.core751.subsystems.drivetrain.DifferentialDriveTrain;
 
 public class ArcadeDrive extends CommandBase {
 

@@ -1,7 +1,7 @@
 package frc.robot.core751.commands.drivetrain;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.core751.subsystems.PIDDriveTrain;
+import frc.robot.core751.subsystems.drivetrain.PIDDriveTrain;
 import frc.robot.core751.wrappers.OverrideableJoystick;
 
 public class PIDDrive extends CommandBase {

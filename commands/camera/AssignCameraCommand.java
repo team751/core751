@@ -3,7 +3,7 @@ package frc.robot.core751.commands.camera;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.core751.CoreConstants;
-import frc.robot.core751.subsystems.CamServer;
+import frc.robot.core751.subsystems.camera.CamServer;
 
 public class AssignCameraCommand extends CommandBase {
     private int m_device;

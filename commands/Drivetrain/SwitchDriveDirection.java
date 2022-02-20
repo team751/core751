@@ -1,9 +1,9 @@
 package frc.robot.core751.commands.drivetrain;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.core751.subsystems.CamServer;
-import frc.robot.core751.subsystems.DifferentialDriveTrain;
-import frc.robot.core751.subsystems.DifferentialDriveTrain.DriveTrainDirection;
+import frc.robot.core751.subsystems.camera.CamServer;
+import frc.robot.core751.subsystems.drivetrain.DifferentialDriveTrain;
+import frc.robot.core751.wrappers.wDifferentialDrive.DriveTrainDirection;
 import frc.robot.core751.CoreConstants;
 
 public class SwitchDriveDirection extends CommandBase {

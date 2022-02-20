@@ -1,4 +1,4 @@
-package frc.robot.core751.subsystems;
+package frc.robot.core751.subsystems.camera;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;

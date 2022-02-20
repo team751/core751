@@ -2,8 +2,10 @@ package frc.robot.core751.commands.drivetrain;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.core751.CoreConstants;
-import frc.robot.core751.subsystems.DifferentialDriveTrain;
+import frc.robot.core751.subsystems.drivetrain.DifferentialDriveTrain;
+import frc.robot.core751.wrappers.wDifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ReversableArcadeDrive extends CommandBase {
@@ -11,7 +13,7 @@ public class ReversableArcadeDrive extends CommandBase {
     private Boolean smoothing = CoreConstants.smoothing;
 
     private Joystick driveStick;
-    private DifferentialDriveTrain differentialDriveTrain;
+    private wDifferentialDrive differentialDriveTrain;
 
     private double startYDistance;
     private double previousYDistance = 0;
@@ -21,9 +23,13 @@ public class ReversableArcadeDrive extends CommandBase {
 
     private double speedCap;
 
-    public ReversableArcadeDrive(Joystick driveStick, DifferentialDriveTrain differentialDriveTrain) {
+    /**
+     * @param driveStick
+     * @param differentialDriveTrain you need to have this subsystem impliment wDifferentialDrive
+     */
+    public ReversableArcadeDrive(Joystick driveStick, SubsystemBase differentialDriveTrain) {
         this.driveStick = driveStick;
-        this.differentialDriveTrain = differentialDriveTrain;
+        this.differentialDriveTrain = (wDifferentialDrive)differentialDriveTrain;
         addRequirements(differentialDriveTrain);
     }
 
