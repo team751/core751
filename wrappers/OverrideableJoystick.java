@@ -69,12 +69,14 @@ public class OverrideableJoystick extends Joystick{
 
     @Override
     public boolean getRawButton(int button) {
-        if(held[button]){
-            return true;
-        } else {
-            return super.getRawButton(button);
-        }
+        // if(held[button]){
+        //     return true;
+        // } else {
+        //     return super.getRawButton(button);
+        // }
+        return super.getRawButton(button);
     }
+
 
     public int[] getButtonsPressed(){
         int[] temp = new int[buttons.length];

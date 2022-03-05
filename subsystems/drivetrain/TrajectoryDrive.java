@@ -4,6 +4,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
@@ -35,8 +37,6 @@ public class TrajectoryDrive extends SubsystemBase implements wDifferentialDrive
   private final CANSparkMax rightMotorFollower1 = new CANSparkMax(CoreConstants.rightDrivetrainIDs[1],MotorType.kBrushless);
   private final CANSparkMax rightMotorFollower2 = new CANSparkMax(CoreConstants.rightDrivetrainIDs[2],MotorType.kBrushless);
 
-  //private final PhotonCamera photonCamera = new PhotonCamera("gloworm");
-
   private final DifferentialDrive differentialDrive = new DifferentialDrive(leftMotorLeader, rightMotorLeader);
   private final DifferentialDriveOdometry odometry;
 
@@ -52,7 +52,6 @@ public class TrajectoryDrive extends SubsystemBase implements wDifferentialDrive
 
     leftMotorLeader.setInverted(invertLeft);
     rightMotorLeader.setInverted(invertRight);
-    //photonCamera.setPipelineIndex(1);
 
     rightMotorFollower1.follow(rightMotorLeader);
     rightMotorFollower2.follow(rightMotorLeader);
@@ -76,26 +75,17 @@ public class TrajectoryDrive extends SubsystemBase implements wDifferentialDrive
     SmartDashboard.putNumber("Pose X",odometry.getPoseMeters().getX());
     SmartDashboard.putNumber("Pose Y",odometry.getPoseMeters().getY());
     SmartDashboard.putNumber("Pose Rotation",odometry.getPoseMeters().getRotation().getDegrees());
-    // PhotonPipelineResult result = photonCamera.getLatestResult();
 
-    // if (result.hasTargets()) {
-    //     // First calculate range
-    //     double range =
-    //             PhotonUtils.calculateDistanceToTargetMeters(
-    //                     0.6223,
-    //                     2.5654,
-    //                     Units.degreesToRadians(12),
-    //                     Units.degreesToRadians(result.getBestTarget().getPitch()));
-
-    //     // Use this range as the measurement we give to the PID controller.
-    //     // -1.0 required to ensure positive PID controller effort _increases_ range
-    //     SmartDashboard.putNumber("Vision Range", range);
-
-    // }
+    SmartDashboard.putNumber("Left Speed", getWheelSpeeds().leftMetersPerSecond);
+    SmartDashboard.putNumber("Right Speed", getWheelSpeeds().rightMetersPerSecond);
 
     odometry.update(
         m_gyro.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition());
   }
+
+      /*-----------------/
+     /-----Odomitry-----/
+    /-----------------*/
 
   public Pose2d getPose() {
     return odometry.getPoseMeters();
@@ -111,14 +101,6 @@ public class TrajectoryDrive extends SubsystemBase implements wDifferentialDrive
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
     odometry.resetPosition(pose, m_gyro.getRotation2d());
-  }
-
-
-  public void tankDriveVolts(double leftVolts, double rightVolts) {
-    leftMotorLeader.setVoltage(leftVolts);
-    rightMotorLeader.setVoltage(rightVolts);
-    differentialDrive.feed();
-
   }
 
   /** Resets the drive encoders to currently read a position of 0. */
@@ -157,6 +139,42 @@ public class TrajectoryDrive extends SubsystemBase implements wDifferentialDrive
   /** @return degrees per second */
   public double getTurnRate() { 
     return -m_gyro.getRate(); 
+  }
+
+  /*----------------/
+ /-----Driving-----/
+/----------------*/
+
+  public void tankDriveVolts(double leftVolts, double rightVolts) {
+    leftMotorLeader.setVoltage(leftVolts);
+    rightMotorLeader.setVoltage(rightVolts);
+    differentialDrive.feed();
+  }
+
+  public PIDController leftController = new PIDController(0.5, 0, 0);
+  public PIDController rightController = new PIDController(0.5, 0, 0);
+
+  public static SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(CoreConstants.ksVolts, CoreConstants.kvVoltSecondsPerMeter, CoreConstants.kaVoltSecondsSquaredPerMeter);
+
+  public void setWheelVelocity(double leftSpeed,double rightSpeed){
+    leftController.setSetpoint(leftSpeed);
+    rightController.setSetpoint(rightSpeed);
+
+    double leftVolts = leftController.calculate(getWheelSpeeds().leftMetersPerSecond) ;
+    double rightVolts = rightController.calculate(getWheelSpeeds().rightMetersPerSecond);
+
+    leftVolts += feedforward.calculate(leftSpeed);
+    rightVolts += feedforward.calculate(rightSpeed);
+
+    leftMotorLeader.setVoltage(leftVolts);
+    rightMotorLeader.setVoltage(rightVolts);
+
+    differentialDrive.feed();
+
+  }
+
+  public void arcadeDrive(double fwd, double rot) {
+    differentialDrive.arcadeDrive(fwd, rot);
   }
 
   @Override

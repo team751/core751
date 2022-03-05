@@ -15,5 +15,12 @@ public class wTalonFX extends WPI_TalonFX{
         this.set(TalonFXControlMode.PercentOutput, speed);
     }
 
+    /**
+     * @return Velocity in revolutions per second.
+     */
+    public double getVelocity(){
+        return this.getSelectedSensorVelocity() / 2048 * 10;
+    }
+
 
 }

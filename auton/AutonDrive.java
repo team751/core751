@@ -17,22 +17,26 @@ import frc.robot.core751.subsystems.drivetrain.TrajectoryDrive;
 public class AutonDrive{
 
     TrajectoryDrive trajectoryDrive;
-    Trajectory trajectory;
+    Trajectory trajectories[];
 
     RamseteController ramseteController;
     CommandBase ramseteCommand;
 
 
-    public AutonDrive(TrajectoryDrive trajectoryDrive,Trajectory trajectory){
+    public AutonDrive(TrajectoryDrive trajectoryDrive,Trajectory[] trajectories){
         this.trajectoryDrive = trajectoryDrive;
-        this.trajectory = trajectory;
+        this.trajectories = trajectories;
 
         RamseteController controller =  new RamseteController(CoreConstants.ramseteB, CoreConstants.ramseteZeta);
         PIDController pidControllerLeft = new PIDController(CoreConstants.kPDriveVel,0,0);
         PIDController pidControllerRight = new PIDController(CoreConstants.kPDriveVel,0,0);
-        RamseteCommand command = //Stolen from WPI them selves
+
+        RamseteCommand commands[] = new RamseteCommand[trajectories.length];
+
+        for(int i = 0; i < trajectories.length; i++){
+            RamseteCommand command = //Stolen from WPI them selves
             new RamseteCommand(
-                trajectory,
+                trajectories[i],
                 trajectoryDrive::getPose,
                 controller,
                 new SimpleMotorFeedforward(
@@ -48,13 +52,15 @@ public class AutonDrive{
                     trajectoryDrive.tankDriveVolts(leftVolts, rightVolts);
                 },
                 trajectoryDrive);
-    
-    
-        // Reset odometry to the starting pose of the trajectory.
-        trajectoryDrive.resetOdometry(trajectory.getInitialPose());
-    
+            commands[i] = command;
+        }
+         // Reset odometry to the starting pose of the trajectory.
+         trajectoryDrive.resetOdometry(trajectories[0].getInitialPose());
         // Run path following command, then stop at the end.\
-        ramseteCommand = command.andThen(() -> trajectoryDrive.tankDriveVolts(0, 0));
+        for(int i =  trajectories.length - 1; i >= 0; i--){
+            commands[i].andThen(commands[i+1]);
+        }
+        ramseteCommand = commands[commands.length - 1].andThen(() -> trajectoryDrive.tankDriveVolts(0, 0));
 
     }
 

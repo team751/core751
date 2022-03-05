@@ -31,13 +31,15 @@ public class ReversableArcadeDrive extends CommandBase {
         this.driveStick = driveStick;
         this.differentialDriveTrain = (wDifferentialDrive)differentialDriveTrain;
         addRequirements(differentialDriveTrain);
+        SmartDashboard.putNumber("Speed Cap", CoreConstants.speedCap);
     }
 
     @Override
     public void execute() {
-        int mod = differentialDriveTrain.getDirection().getMod();
-        double x = driveStick.getX()*-1;
-        double y = driveStick.getY()*mod;
+        //int mod = differentialDriveTrain.getDirection().getMod();
+        int mod = 1;
+        double x = driveStick.getY()*-1;
+        double y = driveStick.getX()*mod;
 
         speedCap = SmartDashboard.getNumber("Speed Cap", CoreConstants.speedCap);
         if(smoothing){ //With Smoothing
@@ -77,7 +79,7 @@ public class ReversableArcadeDrive extends CommandBase {
                 y = Math.min(speedCap, y);
             }
     
-            this.differentialDriveTrain.getDifferentialDrive().arcadeDrive(x, y);
+            this.differentialDriveTrain.getDifferentialDrive().arcadeDrive(x, y*0.75);
         }
     }
 
